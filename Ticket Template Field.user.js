@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.3
+// @version      0.4
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -274,9 +274,13 @@ window.onResolve = function () {
 
     let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
     let enq_close_notes = "Answer: ";
-    if (document.getElementById('incident.u_type').value == "incident") {
+
+    let u_type = document.getElementById('incident.u_type').value
+    console.log(`[TplScript] onResolve()| u_type: ${u_type}`)
+
+    if (u_type == "incident") {
         document.getElementById('incident.close_notes').value = inc_close_notes;
-    } else if (document.getElementById('incident.u_type').value == "enquiry") {
+    } else if (u_type == "enquiry") {
         document.getElementById('incident.close_notes').value = enq_close_notes;
     }
 
