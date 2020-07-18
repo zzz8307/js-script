@@ -121,7 +121,7 @@ Approved by: ";
 
 
 (function () {
-    console.log(`[TplScript] Start`)
+    console.log(`[TplScript] Start`);
     window.ticket_type = "";
 
     let inc_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
@@ -129,15 +129,15 @@ Approved by: ";
     let task_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_task\.do\?/i;
 
     let u = window.location.href;
-    console.log(`[TplScript] URL: ${u}`)
+    console.log(`[TplScript] URL: ${u}`);
 
     if (u.match(inc_match)) {
-        console.log(`[TplScript] setAttribute for 'r' and 'rb'`)
+        console.log(`[TplScript] setAttribute for 'r' and 'rb'`);
 
         let r = document.getElementById('resolve_incident');
         let rb = document.getElementById('resolve_incident_bottom');
-        r.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;")
-        rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;")
+        r.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
+        rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
         ticket_type = "inc";
     } else if (u.match(req_match)) {
         ticket_type = "req";
@@ -145,8 +145,8 @@ Approved by: ";
         ticket_type = "task";
     }
 
-    console.log(`[TplScript] ticket_type: ${ticket_type}`)
-    console.log(`[TplScript] Getting 'vsplit col-sm-6'`)
+    console.log(`[TplScript] ticket_type: ${ticket_type}`);
+    console.log(`[TplScript] Getting 'vsplit col-sm-6'`);
 
     // add template element to 'e'
     let e = document.getElementsByClassName("vsplit col-sm-6").item(0);
@@ -154,12 +154,12 @@ Approved by: ";
     se = addTemplateField(e);
     addTicketTemplate(se, ticket_type);
 
-    console.log(`[TplScript] End`)
+    console.log(`[TplScript] End`);
 })();
 
 
 function addTemplateField(parentElement) {
-    console.log(`[TplScript] addTemplateField()| Start`)
+    console.log(`[TplScript] addTemplateField()| Start`);
 
     let ph = document.createElement('div');
     ph.id = "placeholder";
@@ -167,15 +167,15 @@ function addTemplateField(parentElement) {
     ph.style = "visibility: hidden";
     ph.innerHTML = '<div class="" data-type="label" choice="1" type="choice" nowrap="true"><label class=" col-xs-12 col-md-3 col-lg-4 control-label"><span title="" class="label-text" data-html="false" data-original-title="">Placeholder</span></label></div><div class="col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls"><select name="placeholder" style="; " class="form-control"></select></div><div class="col-xs-2 col-sm-3 col-lg-2 form-field-addons"></div>';
     parentElement.append(ph);
-    console.log(`[TplScript] addTemplateField()| Placeholder appended`)
+    console.log(`[TplScript] addTemplateField()| Placeholder appended`);
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'`);
     let tpl_div = document.createElement('div');
     tpl_div.id = "element.template";
     tpl_div.className = "form-group ";
     tpl_div.style = "";
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'`);
     let tpl_div_label = document.createElement('div');
     tpl_div_label.id = "label.template";
     tpl_div_label.className = "";
@@ -184,14 +184,14 @@ function addTemplateField(parentElement) {
     tpl_div_label.setAttribute("choice", "1");
     tpl_div_label.setAttribute("nowarp", "true");
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'`);
     let tpl_label = document.createElement('label');
     tpl_label.className = " col-xs-12 col-md-3 col-lg-4 control-label";
     tpl_label.setAttribute("onclick", "return labelClicked(this);");
     tpl_label.setAttribute("for", "template");
     tpl_label.setAttribute("dir", "ltr");
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'`);
     let tpl_span = document.createElement('span');
     tpl_span.title = "";
     tpl_span.className = "label-text";
@@ -199,11 +199,11 @@ function addTemplateField(parentElement) {
     tpl_span.setAttribute("data-html", "false");
     tpl_span.setAttribute("data-original-title", "Select a ticket template");
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'`);
     let tpl_div_select = document.createElement('div');
     tpl_div_select.className = "col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls";
 
-    console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'`)
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'`);
     let tpl_select = document.createElement('select');
     tpl_select.name = tpl_select.id = "template";
     tpl_select.className = "form-control";
@@ -217,18 +217,18 @@ function addTemplateField(parentElement) {
     tpl_label.append(tpl_span);
     tpl_div.append(tpl_div_select);
     tpl_div_select.append(tpl_select);
-    console.log(`[TplScript] addTemplateField()| All things appended`)
+    console.log(`[TplScript] addTemplateField()| All things appended`);
 
     return tpl_select;
 }
 
 
 function addTicketTemplate(s, tType) {
-    console.log(`[TplScript] addTicketTemplate()| Start`)
+    console.log(`[TplScript] addTicketTemplate()| Start`);
 
     let op = document.createElement('option');
     op.value = "";
-    op.innerText = "-- None --"
+    op.innerText = "-- None --";
     op.setAttribute("role", "option");
     op.setAttribute("selected", "SELECTED");
     s.append(op);
@@ -239,7 +239,7 @@ function addTicketTemplate(s, tType) {
             t.innerText = tpl_name[key];
             t.setAttribute("role", "option");
             s.append(t);
-            console.log(`[TplScript] addTicketTemplate()| ${key} added`)
+            console.log(`[TplScript] addTicketTemplate()| ${key} added`);
         }
     } else if (tType == "req" || tType == "task") {
         for (let key in req_tpl) {
@@ -248,16 +248,16 @@ function addTicketTemplate(s, tType) {
             t.innerText = tpl_name[key];
             t.setAttribute("role", "option");
             s.append(t);
-            console.log(`[TplScript] addTicketTemplate()| ${key} added`)
+            console.log(`[TplScript] addTicketTemplate()| ${key} added`);
         }
     }
 }
 
 
 window.onSelect = function (v, tType) {
-    console.log(`[TplScript] onSelect()| Start`)
-    console.log(`[TplScript] onSelect()| tType: ${tType}`)
-    console.log(`[TplScript] onSelect()| v: ${v}`)
+    console.log(`[TplScript] onSelect()| Start`);
+    console.log(`[TplScript] onSelect()| tType: ${tType}`);
+    console.log(`[TplScript] onSelect()| v: ${v}`);
 
     if (tType == "inc") {
         document.getElementById('incident.description').style.height = '1px';
@@ -273,18 +273,18 @@ window.onSelect = function (v, tType) {
         document.getElementById('sc_task.description').style.height = document.getElementById('sc_task.description').scrollHeight + 'px';
     }
 
-    console.log(`[TplScript] onSelect()| End`)
+    console.log(`[TplScript] onSelect()| End`);
 }
 
 
 window.onResolve = function () {
-    console.log(`[TplScript] onResolve()| Start`)
+    console.log(`[TplScript] onResolve()| Start`);
 
     let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
     let enq_close_notes = "Answer: ";
 
-    let u_type = document.getElementById('incident.u_type').value
-    console.log(`[TplScript] onResolve()| u_type: ${u_type}`)
+    let u_type = document.getElementById('incident.u_type').value;
+    console.log(`[TplScript] onResolve()| u_type: ${u_type}`);
 
     if (u_type == "incident") {
         document.getElementById('incident.close_notes').value = inc_close_notes;
@@ -292,7 +292,7 @@ window.onResolve = function () {
         document.getElementById('incident.close_notes').value = enq_close_notes;
     }
 
-    console.log(`[TplScript] onResolve()| End`)
+    console.log(`[TplScript] onResolve()| End`);
 }
 
 /*
