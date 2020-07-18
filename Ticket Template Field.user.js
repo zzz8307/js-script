@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.5
+// @version      0.6
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
 // @match        https://chanelasia.service-now.com/sc_task.do*
+// @match        https://chanelasia.service-now.com/servicecatalog_checkout_one_v2.do*
 // @grant        none
 // @updateURL    https://github.com/zzz8307/js-script/raw/master/Ticket%20Template%20Field.user.js
 // @downloadURL  https://github.com/zzz8307/js-script/raw/master/Ticket%20Template%20Field.user.js
@@ -127,6 +128,7 @@ Approved by: ";
     let inc_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
     let req_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_request\.do\?/i;
     let task_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_task\.do\?/i;
+    let sc_chechout_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/servicecatalog_checkout_one_v2\.do\?/i;
 
     let u = window.location.href;
     console.log(`[TplScript] URL: ${u}`);
@@ -138,8 +140,9 @@ Approved by: ";
         let rb = document.getElementById('resolve_incident_bottom');
         r.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
         rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
+        
         ticket_type = "inc";
-    } else if (u.match(req_match)) {
+    } else if (u.match(req_match) || u.match(sc_chechout_match)) {
         ticket_type = "req";
     } else if (u.match(task_match)) {
         ticket_type = "task";
@@ -149,7 +152,11 @@ Approved by: ";
     console.log(`[TplScript] Getting 'vsplit col-sm-6'`);
 
     // add template element to 'e'
-    let e = document.getElementsByClassName("vsplit col-sm-6").item(0);
+    if (u.match(sc_chechout_match)) {
+        let e = document.getElementsByClassName('col-xs-8').item(2);
+    } else {
+        let e = document.getElementsByClassName("vsplit col-sm-6").item(0);
+    }
     // 'select' element
     se = addTemplateField(e);
     addTicketTemplate(se, ticket_type);
