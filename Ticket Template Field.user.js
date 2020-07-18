@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.7
+// @version      0.8
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -124,7 +124,7 @@ Approved by: ";
 (function () {
     console.log(`[TplScript] Start`);
     window.ticket_type = "";
-    window.url_type = "other";
+    window.url_type = "normal";
 
     let inc_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
     let req_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_request\.do\?/i;
