@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.4
+// @version      0.5
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -119,6 +119,7 @@ Application Content: \n\
 Business Justification: \n\
 Approved by: ";
 
+
 (function () {
     console.log(`[TplScript] Start`)
     window.ticket_type = "";
@@ -147,109 +148,115 @@ Approved by: ";
     console.log(`[TplScript] ticket_type: ${ticket_type}`)
     console.log(`[TplScript] Getting 'vsplit col-sm-6'`)
 
-    var e = document.getElementsByClassName("vsplit col-sm-6").item(0);
-    addTemplateField(ticket_type);
-
-    function addTemplateField(tType) {
-        console.log(`[TplScript] addTemplateField()| Start`)
-
-        let ph = document.createElement('div');
-        ph.id = "placeholder";
-        ph.className = "form-group ";
-        ph.style = "visibility: hidden";
-        ph.innerHTML = '<div class="" data-type="label" choice="1" type="choice" nowrap="true"><label class=" col-xs-12 col-md-3 col-lg-4 control-label"><span title="" class="label-text" data-html="false" data-original-title="">Placeholder</span></label></div><div class="col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls"><select name="placeholder" style="; " class="form-control"></select></div><div class="col-xs-2 col-sm-3 col-lg-2 form-field-addons"></div>';
-        e.append(ph);
-        console.log(`[TplScript] addTemplateField()| Placeholder appended`)
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'`)
-        let tpl_div = document.createElement('div');
-        tpl_div.id = "element.template";
-        tpl_div.className = "form-group ";
-        tpl_div.style = "";
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'`)
-        let tpl_div_label = document.createElement('div');
-        tpl_div_label.id = "label.template";
-        tpl_div_label.className = "";
-        tpl_div_label.setAttribute("type", "choice");
-        tpl_div_label.setAttribute("data-type", "label");
-        tpl_div_label.setAttribute("choice", "1");
-        tpl_div_label.setAttribute("nowarp", "true");
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'`)
-        let tpl_label = document.createElement('label');
-        tpl_label.className = " col-xs-12 col-md-3 col-lg-4 control-label";
-        tpl_label.setAttribute("onclick", "return labelClicked(this);");
-        tpl_label.setAttribute("for", "template");
-        tpl_label.setAttribute("dir", "ltr");
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'`)
-        let tpl_span = document.createElement('span');
-        tpl_span.title = "";
-        tpl_span.className = "label-text";
-        tpl_span.innerText = "Template";
-        tpl_span.setAttribute("data-html", "false");
-        tpl_span.setAttribute("data-original-title", "Select a ticket template");
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'`)
-        let tpl_div_select = document.createElement('div');
-        tpl_div_select.className = "col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls";
-
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'`)
-        let tpl_select = document.createElement('select');
-        tpl_select.name = tpl_select.id = "template";
-        tpl_select.className = "form-control";
-        tpl_select.setAttribute("aria-labelledby", "label.template");
-        tpl_select.setAttribute("ng-non-bindable", "true");
-        tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type);");
-
-        e.append(tpl_div);
-        tpl_div.append(tpl_div_label);
-        tpl_div_label.append(tpl_label);
-        tpl_label.append(tpl_span);
-        tpl_div.append(tpl_div_select);
-        tpl_div_select.append(tpl_select);
-        console.log(`[TplScript] addTemplateField()| All things appended`)
-
-        addTicketTemplate(tpl_select, tType);
-    }
-
-    function addTicketTemplate(s, tType) {
-        console.log(`[TplScript] addTicketTemplate()| Start`)
-
-        let op = document.createElement('option');
-        op.value = "";
-        op.innerText = "-- None --"
-        op.setAttribute("role", "option");
-        op.setAttribute("selected", "SELECTED");
-        s.append(op);
-        if (tType == "inc") {
-            for (let key in inc_tpl) {
-                let t = document.createElement('option');
-                t.value = key;
-                t.innerText = tpl_name[key];
-                t.setAttribute("role", "option");
-                s.append(t);
-                console.log(`[TplScript] addTicketTemplate()| ${key} added`)
-            }
-        } else if (tType == "req" || tType == "task") {
-            for (let key in req_tpl) {
-                let t = document.createElement('option');
-                t.value = key;
-                t.innerText = tpl_name[key];
-                t.setAttribute("role", "option");
-                s.append(t);
-                console.log(`[TplScript] addTicketTemplate()| ${key} added`)
-            }
-        }
-    }
+    // add template element to 'e'
+    let e = document.getElementsByClassName("vsplit col-sm-6").item(0);
+    // 'select' element
+    se = addTemplateField(e);
+    addTicketTemplate(se, ticket_type);
 
     console.log(`[TplScript] End`)
 })();
 
+
+function addTemplateField(parentElement) {
+    console.log(`[TplScript] addTemplateField()| Start`)
+
+    let ph = document.createElement('div');
+    ph.id = "placeholder";
+    ph.className = "form-group ";
+    ph.style = "visibility: hidden";
+    ph.innerHTML = '<div class="" data-type="label" choice="1" type="choice" nowrap="true"><label class=" col-xs-12 col-md-3 col-lg-4 control-label"><span title="" class="label-text" data-html="false" data-original-title="">Placeholder</span></label></div><div class="col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls"><select name="placeholder" style="; " class="form-control"></select></div><div class="col-xs-2 col-sm-3 col-lg-2 form-field-addons"></div>';
+    parentElement.append(ph);
+    console.log(`[TplScript] addTemplateField()| Placeholder appended`)
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'`)
+    let tpl_div = document.createElement('div');
+    tpl_div.id = "element.template";
+    tpl_div.className = "form-group ";
+    tpl_div.style = "";
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'`)
+    let tpl_div_label = document.createElement('div');
+    tpl_div_label.id = "label.template";
+    tpl_div_label.className = "";
+    tpl_div_label.setAttribute("type", "choice");
+    tpl_div_label.setAttribute("data-type", "label");
+    tpl_div_label.setAttribute("choice", "1");
+    tpl_div_label.setAttribute("nowarp", "true");
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'`)
+    let tpl_label = document.createElement('label');
+    tpl_label.className = " col-xs-12 col-md-3 col-lg-4 control-label";
+    tpl_label.setAttribute("onclick", "return labelClicked(this);");
+    tpl_label.setAttribute("for", "template");
+    tpl_label.setAttribute("dir", "ltr");
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'`)
+    let tpl_span = document.createElement('span');
+    tpl_span.title = "";
+    tpl_span.className = "label-text";
+    tpl_span.innerText = "Template";
+    tpl_span.setAttribute("data-html", "false");
+    tpl_span.setAttribute("data-original-title", "Select a ticket template");
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'`)
+    let tpl_div_select = document.createElement('div');
+    tpl_div_select.className = "col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls";
+
+    console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'`)
+    let tpl_select = document.createElement('select');
+    tpl_select.name = tpl_select.id = "template";
+    tpl_select.className = "form-control";
+    tpl_select.setAttribute("aria-labelledby", "label.template");
+    tpl_select.setAttribute("ng-non-bindable", "true");
+    tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type);");
+
+    parentElement.append(tpl_div);
+    tpl_div.append(tpl_div_label);
+    tpl_div_label.append(tpl_label);
+    tpl_label.append(tpl_span);
+    tpl_div.append(tpl_div_select);
+    tpl_div_select.append(tpl_select);
+    console.log(`[TplScript] addTemplateField()| All things appended`)
+
+    return tpl_select;
+}
+
+
+function addTicketTemplate(s, tType) {
+    console.log(`[TplScript] addTicketTemplate()| Start`)
+
+    let op = document.createElement('option');
+    op.value = "";
+    op.innerText = "-- None --"
+    op.setAttribute("role", "option");
+    op.setAttribute("selected", "SELECTED");
+    s.append(op);
+    if (tType == "inc") {
+        for (let key in inc_tpl) {
+            let t = document.createElement('option');
+            t.value = key;
+            t.innerText = tpl_name[key];
+            t.setAttribute("role", "option");
+            s.append(t);
+            console.log(`[TplScript] addTicketTemplate()| ${key} added`)
+        }
+    } else if (tType == "req" || tType == "task") {
+        for (let key in req_tpl) {
+            let t = document.createElement('option');
+            t.value = key;
+            t.innerText = tpl_name[key];
+            t.setAttribute("role", "option");
+            s.append(t);
+            console.log(`[TplScript] addTicketTemplate()| ${key} added`)
+        }
+    }
+}
+
+
 window.onSelect = function (v, tType) {
     console.log(`[TplScript] onSelect()| Start`)
-    console.log(`[TplScript] onSelect()| ticket_type: ${ticket_type}`)
+    console.log(`[TplScript] onSelect()| tType: ${tType}`)
     console.log(`[TplScript] onSelect()| v: ${v}`)
 
     if (tType == "inc") {
@@ -268,6 +275,7 @@ window.onSelect = function (v, tType) {
 
     console.log(`[TplScript] onSelect()| End`)
 }
+
 
 window.onResolve = function () {
     console.log(`[TplScript] onResolve()| Start`)
