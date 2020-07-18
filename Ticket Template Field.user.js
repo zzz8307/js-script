@@ -120,7 +120,7 @@ Business Justification: \n\
 Approved by: ";
 
 (function () {
-    console.log(`[TplScript] Script Start.`)
+    console.log(`[TplScript] Start`)
     window.ticket_type = "";
 
     let inc_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
@@ -128,10 +128,10 @@ Approved by: ";
     let task_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_task\.do\?/i;
 
     let u = window.location.href;
-    console.log(`[TplScript] URL: ${u}.`)
+    console.log(`[TplScript] URL: ${u}`)
 
     if (u.match(inc_match)) {
-        console.log(`[TplScript] setAttribute for 'r' and 'rb'.`)
+        console.log(`[TplScript] setAttribute for 'r' and 'rb'`)
 
         let r = document.getElementById('resolve_incident');
         let rb = document.getElementById('resolve_incident_bottom');
@@ -144,14 +144,14 @@ Approved by: ";
         ticket_type = "task";
     }
 
-    console.log(`[TplScript] ticket_type: ${ticket_type}.`)
-    console.log(`[TplScript] Getting 'vsplit col-sm-6'.`)
+    console.log(`[TplScript] ticket_type: ${ticket_type}`)
+    console.log(`[TplScript] Getting 'vsplit col-sm-6'`)
 
     var e = document.getElementsByClassName("vsplit col-sm-6").item(0);
     addTemplateField(ticket_type);
 
     function addTemplateField(tType) {
-        console.log(`[TplScript] addTemplateField()| Start.`)
+        console.log(`[TplScript] addTemplateField()| Start`)
 
         let ph = document.createElement('div');
         ph.id = "placeholder";
@@ -159,15 +159,15 @@ Approved by: ";
         ph.style = "visibility: hidden";
         ph.innerHTML = '<div class="" data-type="label" choice="1" type="choice" nowrap="true"><label class=" col-xs-12 col-md-3 col-lg-4 control-label"><span title="" class="label-text" data-html="false" data-original-title="">Placeholder</span></label></div><div class="col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls"><select name="placeholder" style="; " class="form-control"></select></div><div class="col-xs-2 col-sm-3 col-lg-2 form-field-addons"></div>';
         e.append(ph);
-        console.log(`[TplScript] addTemplateField()| Placeholder appended.`)
+        console.log(`[TplScript] addTemplateField()| Placeholder appended`)
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div'`)
         let tpl_div = document.createElement('div');
         tpl_div.id = "element.template";
         tpl_div.className = "form-group ";
         tpl_div.style = "";
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_label'`)
         let tpl_div_label = document.createElement('div');
         tpl_div_label.id = "label.template";
         tpl_div_label.className = "";
@@ -176,14 +176,14 @@ Approved by: ";
         tpl_div_label.setAttribute("choice", "1");
         tpl_div_label.setAttribute("nowarp", "true");
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_label'`)
         let tpl_label = document.createElement('label');
         tpl_label.className = " col-xs-12 col-md-3 col-lg-4 control-label";
         tpl_label.setAttribute("onclick", "return labelClicked(this);");
         tpl_label.setAttribute("for", "template");
         tpl_label.setAttribute("dir", "ltr");
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_span'`)
         let tpl_span = document.createElement('span');
         tpl_span.title = "";
         tpl_span.className = "label-text";
@@ -191,11 +191,11 @@ Approved by: ";
         tpl_span.setAttribute("data-html", "false");
         tpl_span.setAttribute("data-original-title", "Select a ticket template");
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_div_select'`)
         let tpl_div_select = document.createElement('div');
         tpl_div_select.className = "col-xs-10 col-sm-9 col-md-6 col-lg-5 form-field input_controls";
 
-        console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'.`)
+        console.log(`[TplScript] addTemplateField()| Creating 'tpl_select'`)
         let tpl_select = document.createElement('select');
         tpl_select.name = tpl_select.id = "template";
         tpl_select.className = "form-control";
@@ -209,12 +209,13 @@ Approved by: ";
         tpl_label.append(tpl_span);
         tpl_div.append(tpl_div_select);
         tpl_div_select.append(tpl_select);
+        console.log(`[TplScript] addTemplateField()| All things appended`)
 
         addTicketTemplate(tpl_select, tType);
     }
 
     function addTicketTemplate(s, tType) {
-        console.log(`[TplScript] addTicketTemplate()| Start.`)
+        console.log(`[TplScript] addTicketTemplate()| Start`)
 
         let op = document.createElement('option');
         op.value = "";
@@ -229,7 +230,7 @@ Approved by: ";
                 t.innerText = tpl_name[key];
                 t.setAttribute("role", "option");
                 s.append(t);
-                console.log(`[TplScript] addTicketTemplate()| ${key} added.`)
+                console.log(`[TplScript] addTicketTemplate()| ${key} added`)
             }
         } else if (tType == "req" || tType == "task") {
             for (let key in req_tpl) {
@@ -238,13 +239,19 @@ Approved by: ";
                 t.innerText = tpl_name[key];
                 t.setAttribute("role", "option");
                 s.append(t);
-                console.log(`[TplScript] addTicketTemplate()| ${key} added.`)
+                console.log(`[TplScript] addTicketTemplate()| ${key} added`)
             }
         }
     }
+
+    console.log(`[TplScript] End`)
 })();
 
 window.onSelect = function (v, tType) {
+    console.log(`[TplScript] onSelect()| Start`)
+    console.log(`[TplScript] onSelect()| ticket_type: ${ticket_type}`)
+    console.log(`[TplScript] onSelect()| v: ${v}`)
+
     if (tType == "inc") {
         document.getElementById('incident.description').style.height = '1px';
         document.getElementById('incident.description').value = inc_tpl[v];
@@ -258,9 +265,13 @@ window.onSelect = function (v, tType) {
         document.getElementById('sc_task.description').value = req_tpl[v];
         document.getElementById('sc_task.description').style.height = document.getElementById('sc_task.description').scrollHeight + 'px';
     }
+
+    console.log(`[TplScript] onSelect()| End`)
 }
 
 window.onResolve = function () {
+    console.log(`[TplScript] onResolve()| Start`)
+
     let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
     let enq_close_notes = "Answer: ";
     if (document.getElementById('incident.u_type').value == "incident") {
@@ -268,6 +279,8 @@ window.onResolve = function () {
     } else if (document.getElementById('incident.u_type').value == "enquiry") {
         document.getElementById('incident.close_notes').value = enq_close_notes;
     }
+
+    console.log(`[TplScript] onResolve()| End`)
 }
 
 /*
