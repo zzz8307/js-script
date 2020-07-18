@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.2
+// @version      0.3
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
