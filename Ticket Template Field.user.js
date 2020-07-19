@@ -342,7 +342,7 @@ window.onSelect = function(key, tType, uType) {
 }
 
 
-window.fillinDesc = function(key, d, tType) {
+function fillinDesc(key, d, tType) {
     console.log(`[TplScript] fillinDesc()| ${d}`);
     if (tType == "inc") {
         document.getElementById(d).style.height = '1px';
@@ -356,7 +356,7 @@ window.fillinDesc = function(key, d, tType) {
 }
 
 
-window.bfTitlePrefix = function(t) {
+function bfTitlePrefix(t) {
     if (!document.getElementById(t).value.startsWith("(Back-fill)")) {
         console.log(`[TplScript] bfTitlePrefix()| Add prefix to ${t}`);
         document.getElementById(t).value = "(Back-fill)" + document.getElementById(t).value;
