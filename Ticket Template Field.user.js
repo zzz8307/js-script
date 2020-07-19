@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.8
+// @version      0.9
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -121,7 +121,7 @@ Business Justification: \n\
 Approved by: ";
 
 
-(function () {
+(function() {
     console.log(`[TplScript] Start`);
     window.ticket_type = "";
     window.url_type = "normal";
@@ -136,14 +136,17 @@ Approved by: ";
     console.log(`[TplScript] URL: ${u}`);
 
     if (u.match(inc_match)) {
-        console.log(`[TplScript] setAttribute for 'r' and 'rb'`);
-
-        let r = document.getElementById('resolve_incident');
-        let rb = document.getElementById('resolve_incident_bottom');
-        r.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
-        rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
-
+        console.log(`[TplScript] setAttribute for resolve button`);
         ticket_type = "inc";
+        try {
+            let r = document.getElementById('resolve_incident');
+            let rb = document.getElementById('resolve_incident_bottom');
+            r.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
+            rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
+        } catch (err) {
+            console.error(err)
+            console.error(`[TplScript] Resolve button not found, moving on`)
+        }
     } else if (u.match(req_match)) {
         ticket_type = "req";
     } else if (u.match(task_match)) {
@@ -163,8 +166,7 @@ Approved by: ";
     } else {
         e = document.getElementsByClassName('vsplit col-sm-6').item(0);
     }
-    // 'select' element
-    se = addTemplateField(e, url_type);
+    se = addTemplateField(e, url_type);  // 'select' element
     addTicketTemplate(se, ticket_type);
 
     console.log(`[TplScript] End`);
@@ -173,6 +175,7 @@ Approved by: ";
 
 function addTemplateField(parentElement, uType) {
     console.log(`[TplScript] addTemplateField()| Start`);
+    console.log(`[TplScript] addTemplateField()| uType: ${uType}`);
 
     let ph = document.createElement('div');
     ph.id = "placeholder";
@@ -236,7 +239,6 @@ function addTemplateField(parentElement, uType) {
         tpl_div.append(tpl_div_select);
         tpl_div_select.append(tpl_select);
         console.log(`[TplScript] addTemplateField()| All things appended`);
-
         return tpl_select;
 
     } else if (uType == "sc_checkout") {
@@ -261,16 +263,15 @@ function addTemplateField(parentElement, uType) {
         let tpl_select = document.createElement('select');
         tpl_select.name = tpl_select.id = "template";
         tpl_select.className = "form-control";
-        tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type, url_type);");        
+        tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type, url_type);");
 
         parentElement.parentNode.insertBefore(tpl_div1, parentElement);
         tpl_div1.append(tpl_div2);
         tpl_div2.append(tpl_div_label);
         tpl_div2.append(tpl_div_select);
         tpl_div_select.append(tpl_select);
-        
-        console.log(`[TplScript] addTemplateField()| All things appended`);
 
+        console.log(`[TplScript] addTemplateField()| All things appended`);
         return tpl_select;
     }
 }
@@ -285,6 +286,7 @@ function addTicketTemplate(s, tType) {
     op.setAttribute("role", "option");
     op.setAttribute("selected", "SELECTED");
     s.append(op);
+
     if (tType == "inc") {
         for (let key in inc_tpl) {
             let t = document.createElement('option');
@@ -307,36 +309,62 @@ function addTicketTemplate(s, tType) {
 }
 
 
-window.onSelect = function (v, tType, uType) {
+window.onSelect = function(key, tType, uType) {
     console.log(`[TplScript] onSelect()| Start`);
     console.log(`[TplScript] onSelect()| tType: ${tType}`);
-    console.log(`[TplScript] onSelect()| v: ${v}`);
+    console.log(`[TplScript] onSelect()| key: ${key}`);
+
+    let desc;
+    let title;
 
     if (tType == "inc") {
-        document.getElementById('incident.description').style.height = '1px';
-        document.getElementById('incident.description').value = inc_tpl[v];
-        document.getElementById('incident.description').style.height = document.getElementById('incident.description').scrollHeight + 'px';
+        desc = "incident.description";
+        title = "incident.short_description";
     } else if (tType == "req") {
         if (uType == "normal") {
-            document.getElementById('sc_request.special_instructions').style.height = '1px';
-            document.getElementById('sc_request.special_instructions').value = req_tpl[v];
-            document.getElementById('sc_request.special_instructions').style.height = document.getElementById('sc_request.special_instructions').scrollHeight + 'px';
+            desc = "sc_request.special_instructions";
+            title = "sc_request.short_description";
         } else if (uType == "sc_checkout") {
-            document.getElementById('special_instructions').style.height = '1px';
-            document.getElementById('special_instructions').value = req_tpl[v];
-            document.getElementById('special_instructions').style.height = document.getElementById('special_instructions').scrollHeight + 'px';
+            desc = "special_instructions";
+            title = "title";
         }
     } else if (tType == "task") {
-        document.getElementById('sc_task.description').style.height = '1px';
-        document.getElementById('sc_task.description').value = req_tpl[v];
-        document.getElementById('sc_task.description').style.height = document.getElementById('sc_task.description').scrollHeight + 'px';
+        desc = "sc_task.description";
+        title = "sc_task.short_description";
+    }
+
+    fillinDesc(key, desc, tType);
+    if (key.endsWith("bf")) {
+        bfTitlePrefix(title);
     }
 
     console.log(`[TplScript] onSelect()| End`);
 }
 
 
-window.onResolve = function () {
+window.fillinDesc = function(key, d, tType) {
+    console.log(`[TplScript] fillinDesc()| ${d}`);
+    if (tType == "inc") {
+        document.getElementById(d).style.height = '1px';
+        document.getElementById(d).value = inc_tpl[key];
+        document.getElementById(d).style.height = document.getElementById(d).scrollHeight + 'px';
+    } else if (tType == "req" || tType == "task") {
+        document.getElementById(d).style.height = '1px';
+        document.getElementById(d).value = req_tpl[key];
+        document.getElementById(d).style.height = document.getElementById(d).scrollHeight + 'px';
+    }
+}
+
+
+window.bfTitlePrefix = function(t) {
+    if (!document.getElementById(t).value.startsWith("(Back-fill)")) {
+        console.log(`[TplScript] bfTitlePrefix()| Add prefix to ${t}`);
+        document.getElementById(t).value = "(Back-fill)" + document.getElementById(t).value;
+    }
+}
+
+
+window.onResolve = function() {
     console.log(`[TplScript] onResolve()| Start`);
 
     let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
