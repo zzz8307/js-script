@@ -416,19 +416,3 @@ window.onResolve = function() {
         }
     }
 }
-
-/*
-// Script Injection
-let tpl_m = tplMain.toString();
-tpl_m = tpl_m.slice(tpl_m.indexOf('{') + 1, -1);
-exec(tpl_m);
-
-function exec(fn) {
-    let script = document.createElement('script');
-    script.id = "tplScript";
-    script.setAttribute('type', 'application/javascript');
-    script.textContent = fn;
-    document.body.appendChild(script);
-    //document.body.removeChild(script);
-}
-*/
