@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.9
+// @version      0.9.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -373,10 +373,12 @@ window.onResolve = function() {
     let u_type = document.getElementById('incident.u_type').value;
     console.log(`[TplScript] onResolve()| u_type: ${u_type}`);
 
-    if (u_type == "incident") {
-        document.getElementById('incident.close_notes').value = inc_close_notes;
-    } else if (u_type == "enquiry") {
-        document.getElementById('incident.close_notes').value = enq_close_notes;
+    if (document.getElementById('incident.close_notes').value == "") {
+        if (u_type == "incident") {
+            document.getElementById('incident.close_notes').value = inc_close_notes;
+        } else if (u_type == "enquiry") {
+            document.getElementById('incident.close_notes').value = enq_close_notes;
+        }
     }
 
     console.log(`[TplScript] onResolve()| End`);
