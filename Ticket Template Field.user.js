@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ticket Template Field
-// @version      0.9.1
+// @version      0.10.0
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -14,6 +14,7 @@
 var inc_tpl = new Object();
 var req_tpl = new Object();
 var tpl_name = new Object();
+var tpl_title = new Object();
 
 tpl_name["inc_fcr"] = "Incident - FCR ticket template";
 inc_tpl["inc_fcr"] = "(Location/Store Name)\n\
@@ -119,6 +120,36 @@ Application Type: Access Right / Software / Hardware / Loan / Other\n\
 Application Content: \n\
 Business Justification: \n\
 Approved by: ";
+
+tpl_name["req_icoco"] = "Request - iCoco account";
+tpl_title["req_icoco"] = "Create/Deactivate/Modify iCoco Account for {BTQ Name} - {Employee ID}";
+req_tpl["req_icoco"] = "- Last name: \n\
+- First name: \n\
+- Email: \n\
+- AD/LDAP Username: \n\
+- Employee ID: \n\
+- Staff code: \n\
+- Country/Location: CN \n\
+- Job Title: \n\
+- Date of employment/Cessation Date: 入职日期/离职日期 \n\
+- Status: 入职/离职/转店 \n\
+- Store Name: \n\
+- Request Access: iCoco(Chanel CN Sales) \n\
+- Active: True/False";
+
+tpl_name["req_fuji"] = "Request - Fuji Xerox printer supplies";
+tpl_title["req_fuji"] = "香奈儿耗材订购 - {BTQ Name} - {Date}";
+req_tpl["req_fuji"] = "Ticket Number: \n\
+Store Name: \n\
+Store Address: \n\
+Caller: \n\
+Contact number: \n\
+Date and Time of Request: \n\
+Device(SN): \n\
+Device IP: \n\
+Request Content: \n\
+Screenshots and attachments: Please refer to the screenshot as below and the attachment named: \n\
+Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联系用户确认，谢谢";
 
 
 (function() {
@@ -310,7 +341,6 @@ function addTicketTemplate(s, tType) {
 
 
 window.onSelect = function(key, tType, uType) {
-    console.log(`[TplScript] onSelect()| Start`);
     console.log(`[TplScript] onSelect()| tType: ${tType}`);
     console.log(`[TplScript] onSelect()| key: ${key}`);
 
@@ -334,24 +364,31 @@ window.onSelect = function(key, tType, uType) {
     }
 
     fillinDesc(key, desc, tType);
+    fillinTitle(key, title);
     if (key.endsWith("bf")) {
         bfTitlePrefix(title);
     }
-
-    console.log(`[TplScript] onSelect()| End`);
 }
 
 
 function fillinDesc(key, d, tType) {
     console.log(`[TplScript] fillinDesc()| ${d}`);
-    if (tType == "inc") {
+    if (tType == "inc" && inc_tpl[key] !== undefined) {
         document.getElementById(d).style.height = '1px';
         document.getElementById(d).value = inc_tpl[key];
         document.getElementById(d).style.height = document.getElementById(d).scrollHeight + 'px';
-    } else if (tType == "req" || tType == "task") {
+    } else if ((tType == "req" || tType == "task") && req_tpl[key] !== undefined) {
         document.getElementById(d).style.height = '1px';
         document.getElementById(d).value = req_tpl[key];
         document.getElementById(d).style.height = document.getElementById(d).scrollHeight + 'px';
+    }
+}
+
+
+function fillinTitle(key, t) {
+    console.log(`[TplScript] fillinTitle()| ${t}`);
+    if (tpl_title[key] !== undefined) {
+        document.getElementById(t).value = tpl_title[key];
     }
 }
 
@@ -365,8 +402,6 @@ function bfTitlePrefix(t) {
 
 
 window.onResolve = function() {
-    console.log(`[TplScript] onResolve()| Start`);
-
     let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
     let enq_close_notes = "Answer: ";
 
@@ -380,8 +415,6 @@ window.onResolve = function() {
             document.getElementById('incident.close_notes').value = enq_close_notes;
         }
     }
-
-    console.log(`[TplScript] onResolve()| End`);
 }
 
 /*
