@@ -7,8 +7,8 @@
 // @match        https://chanelasia.service-now.com/sc_task.do*
 // @match        https://chanelasia.service-now.com/servicecatalog_checkout_one_v2.do*
 // @grant        none
-// @updateURL    https://github.com/zzz8307/js-script/raw/master/Ticket%20Template%20Field.user.js
-// @downloadURL  https://github.com/zzz8307/js-script/raw/master/Ticket%20Template%20Field.user.js
+// @updateURL    https://github.com/zzz8307/js-script/raw/master/SN%20Tool.user.js
+// @downloadURL  https://github.com/zzz8307/js-script/raw/master/SN%20Tool.user.js
 // ==/UserScript==
 
 var inc_tpl = new Object();
