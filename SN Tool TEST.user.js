@@ -166,7 +166,7 @@ wn_tpl["wn_confirm_3"] = "RSD has sent confirmation emails to user three times. 
 
 
 (function () {
-    console.log(`[SNTool] Start`);
+    SNToolLogger(`Start`);
     window.ticket_type = "";
     window.url_type = "normal";
 
@@ -177,10 +177,10 @@ wn_tpl["wn_confirm_3"] = "RSD has sent confirmation emails to user three times. 
 
     let e;
     let u = window.location.href;
-    console.log(`[SNTool] URL: ${u}`);
+    SNToolLogger(`URL: ${u}`);
 
     if (u.match(inc_match)) {
-        console.log(`[SNTool] setAttribute for resolve button`);
+        SNToolLogger(`setAttribute for resolve button`);
         ticket_type = "inc";
         try {
             let r = document.getElementById('resolve_incident');
@@ -193,7 +193,7 @@ wn_tpl["wn_confirm_3"] = "RSD has sent confirmation emails to user three times. 
         }
     } else if (u.match(req_match)) {
         ticket_type = "req";
-        console.log(`[SNTool] Set 'element.sc_request.parent' to visible`);
+        SNToolLogger(`Set 'element.sc_request.parent' to visible`);
         let div = document.getElementById("element.sc_request.parent");
         div.show();
         addSaveButton();
@@ -205,8 +205,8 @@ wn_tpl["wn_confirm_3"] = "RSD has sent confirmation emails to user three times. 
         url_type = "sc_checkout";
     }
 
-    console.log(`[SNTool] ticket_type: ${ticket_type}`);
-    console.log(`[SNTool] url_type: ${url_type}`);
+    SNToolLogger(`ticket_type: ${ticket_type}`);
+    SNToolLogger(`url_type: ${url_type}`);
 
     if (url_type == "sc_checkout") {
         e = document.getElementsByClassName('container').item(2);
@@ -220,12 +220,12 @@ wn_tpl["wn_confirm_3"] = "RSD has sent confirmation emails to user three times. 
     se = addTemplateField(e, url_type);  // 'select' element of Templete field
     addTicketTemplate(se, ticket_type);
 
-    console.log(`[SNTool] End`);
+    SNToolLogger(`End`);
 })();
 
 
 function addTemplateField(parentElement, uType) {
-    console.log(`[SNTool] addTemplateField()| uType: ${uType}`);
+    SNToolLogger(`uType: ${uType}`);
 
     if (uType == "normal") {
         let ph = document.createElement('div');
@@ -277,7 +277,7 @@ function addTemplateField(parentElement, uType) {
         tpl_label.append(tpl_span);
         tpl_div.append(tpl_div_select);
         tpl_div_select.append(tpl_select);
-        console.log(`[SNTool] addTemplateField()| Elements appended`);
+        SNToolLogger(`Elements appended`);
         return tpl_select;
 
     } else if (uType == "sc_checkout") {
@@ -305,7 +305,7 @@ function addTemplateField(parentElement, uType) {
         tpl_div2.append(tpl_div_select);
         tpl_div_select.append(tpl_select);
 
-        console.log(`[SNTool] addTemplateField()| Elements appended`);
+        SNToolLogger(`Elements appended`);
         return tpl_select;
     }
 }
@@ -326,7 +326,7 @@ function addTicketTemplate(s, tType) {
             t.innerText = tpl_name[key];
             t.setAttribute("role", "option");
             s.append(t);
-            console.log(`[SNTool] addTicketTemplate()| ${key} added`);
+            SNToolLogger(`${key} added`);
         }
     } else if (tType == "req" || tType == "task") {
         for (let key in req_tpl) {
@@ -335,7 +335,7 @@ function addTicketTemplate(s, tType) {
             t.innerText = tpl_name[key];
             t.setAttribute("role", "option");
             s.append(t);
-            console.log(`[SNTool] addTicketTemplate()| ${key} added`);
+            SNToolLogger(`${key} added`);
         }
     }
 }
@@ -352,13 +352,13 @@ function getWnParentElement(tType) {
         e = "element.sc_task.work_notes";
     }
 
-    console.log(`[SNTool] getWnParentElement()| ${e}`);
+    SNToolLogger(`${e}`);
     return document.getElementById(e);
 }
 
 
 function addWnTemplateField(parentElement) {
-    console.log(`[SNTool] addWnTemplateField()| Start`);
+    SNToolLogger(`Start`);
 
     let wn_tpl_div = document.createElement('div');
     wn_tpl_div.id = "element.wn_template";
@@ -410,13 +410,13 @@ function addWnTemplateField(parentElement) {
     wn_tpl_div.append(wn_tpl_div_select);
     wn_tpl_div_select.append(wn_tpl_select);
 
-    console.log(`[SNTool] addWnTemplateField()| Elements appended`);
+    SNToolLogger(`Elements appended`);
     return wn_tpl_select;
 }
 
 
 function addWnTemplate(s) {
-    console.log(`[SNTool] addWnTemplate()| Start`);
+    SNToolLogger(`Start`);
 
     let op = document.createElement('option');
     op.value = "";
@@ -431,7 +431,7 @@ function addWnTemplate(s) {
         t.innerText = tpl_name[key];
         t.setAttribute("role", "option");
         s.append(t);
-        console.log(`[SNTool] addWnTemplate()| ${key} added`);
+        SNToolLogger(`${key} added`);
     }
 }
 
@@ -446,13 +446,13 @@ function addSaveButton() {
     saveBtn.setAttribute("type", "submit")
     saveBtn.setAttribute("onclick", "gsftSubmit(gel('sysverb_update_and_stay'))")
     btnHeader.insertBefore(saveBtn, btnHeader.children[4])
-    console.log(`[SNTool] addSaveButton()| Added`);
+    SNToolLogger(`Added`);
 }
 
 
 window.onWnSelect = function (key, tType) {
-    console.log(`[SNTool] onWnSelect()| tType: ${tType}`);
-    console.log(`[SNTool] onWnSelect()| key: ${key}`);
+    SNToolLogger(`tType: ${tType}`);
+    SNToolLogger(`key: ${key}`);
 
     let wn_textarea;
     let assignment_group;
@@ -470,9 +470,9 @@ window.onWnSelect = function (key, tType) {
         assignee = "sys_display.sc_task.assigned_to";
     }
 
-    console.log(`[SNTool] onWnSelect()| wn_textarea: ${wn_textarea}`);
-    console.log(`[SNTool] onWnSelect()| assignment_group: ${assignment_group}`);
-    console.log(`[SNTool] onWnSelect()| assignee: ${assignee}`);
+    SNToolLogger(`wn_textarea: ${wn_textarea}`);
+    SNToolLogger(`assignment_group: ${assignment_group}`);
+    SNToolLogger(`assignee: ${assignee}`);
     fillinWn(key, wn_textarea, assignment_group, assignee);
 }
 
@@ -483,8 +483,8 @@ function fillinWn(key, wn, ag, a) {
             if (ag !== undefined || a !== undefined) {
                 let av = document.getElementById(a).value;
                 let agv = document.getElementById(ag).value;
-                console.log(`[SNTool] fillinWn()| av: ${av}`);
-                console.log(`[SNTool] fillinWn()| agv: ${agv}`);
+                SNToolLogger(`av: ${av}`);
+                SNToolLogger(`agv: ${agv}`);
 
                 if (agv != "" && av != "") {
                     document.getElementById(wn).value = `${av} from ${agv} ${wn_tpl[key]}`;
@@ -503,8 +503,8 @@ function fillinWn(key, wn, ag, a) {
 
 
 window.onSelect = function (key, tType, uType) {
-    console.log(`[SNTool] onSelect()| tType: ${tType}`);
-    console.log(`[SNTool] onSelect()| key: ${key}`);
+    SNToolLogger(`tType: ${tType}`);
+    SNToolLogger(`key: ${key}`);
 
     let desc;
     let title;
@@ -537,7 +537,7 @@ window.onSelect = function (key, tType, uType) {
 
 
 function fillinDesc(key, d, tType) {
-    console.log(`[SNTool] fillinDesc()| ${d}`);
+    SNToolLogger(`${d}`);
     if (tType == "inc" && inc_tpl[key] !== undefined) {
         document.getElementById(d).style.height = '1px';
         document.getElementById(d).value = inc_tpl[key];
@@ -551,7 +551,7 @@ function fillinDesc(key, d, tType) {
 
 
 function fillinTitle(key, t) {
-    console.log(`[SNTool] fillinTitle()| ${t}`);
+    SNToolLogger(`${t}`);
     if (tpl_title[key] !== undefined) {
         document.getElementById(t).value = tpl_title[key];
     }
@@ -560,7 +560,7 @@ function fillinTitle(key, t) {
 
 function bfTitlePrefix(t) {
     if (!document.getElementById(t).value.startsWith("(Back-fill)")) {
-        console.log(`[SNTool] bfTitlePrefix()| Add prefix to ${t}`);
+        SNToolLogger(`Add prefix to ${t}`);
         document.getElementById(t).value = "(Back-fill)" + document.getElementById(t).value;
     }
 }
@@ -571,7 +571,7 @@ window.onResolve = function () {
     let enq_close_notes = "Answer: ";
 
     let u_type = document.getElementById('incident.u_type').value;
-    console.log(`[SNTool] onResolve()| u_type: ${u_type}`);
+    SNToolLogger(`u_type: ${u_type}`);
 
     if (document.getElementById('incident.close_notes').value == "") {
         if (u_type == "incident") {
