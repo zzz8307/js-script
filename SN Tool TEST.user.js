@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.0
+// @version      0.12.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -492,8 +492,6 @@ function fillinWn(key, wn, ag, a) {
                     document.getElementById(wn).value = `${agv} ${wn_tpl[key]}`;
                 }
 
-            } else {
-                document.getElementById(wn).value = `Support Team ${wn_tpl[key]}`;
             }
         } else {
             document.getElementById(wn).value = wn_tpl[key];
