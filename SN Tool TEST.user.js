@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.3
+// @version      0.12.4
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -11,68 +11,68 @@
 // @downloadURL  https://github.com/zzz8307/js-script/raw/master/SN%20Tool%20TEST.user.js
 // ==/UserScript==
 
-var inc_tpl = new Object();
-var req_tpl = new Object();
-var wn_tpl = new Object();
-var tpl_name = new Object();
-var tpl_title = new Object();
+var incTpl = new Object();
+var reqTpl = new Object();
+var wnTpl = new Object();
+var tplName = new Object();
+var tplTitle = new Object();
 
 var loc = "(Location/Store Name)";
 
-tpl_name["inc_fcr"] = "Incident - FCR ticket template";
-tpl_name["inc_bf"] = "Incident - Back-fill ticket template";
-tpl_name["inc_non_fcr"] = "Incident - Non-FCR ticket template";
-tpl_name["enq_tpl"] = "Enquiry - Ticket template";
-tpl_name["enq_bf"] = "Enquiry - Back-fill ticket template";
-tpl_name["od_sw"] = "On-demand Dispatching (Software)";
-tpl_name["od_hwn"] = "On-demand Dispatching (Hardware/Network)";
-tpl_name["req_fcr"] = "Request - Fulfilled by RSD";
-tpl_name["req_bf"] = "Request - Back-fill ticket template";
-tpl_name["req_tpl"] = "Request - Ticket template";
-tpl_name["req_icoco"] = "Request - iCoco account";
-tpl_name["req_fuji"] = "Request - Fuji Xerox printer supplies";
-tpl_name["wn_follow_up"] = "Ticket following up by Support Team";
-tpl_name["wn_chase"] = "Emailed to Support Team for ticket updates";
-tpl_name["wn_confirm"] = "Emailed to user for confirmation";
-tpl_name["wn_confirm_3"] = "Emailed to user for confirmation 3 times";
+tplName["inc_fcr"] = "Incident - FCR ticket template";
+tplName["inc_bf"] = "Incident - Back-fill ticket template";
+tplName["inc_non_fcr"] = "Incident - Non-FCR ticket template";
+tplName["enq_tpl"] = "Enquiry - Ticket template";
+tplName["enq_bf"] = "Enquiry - Back-fill ticket template";
+tplName["od_sw"] = "On-demand Dispatching (Software)";
+tplName["od_hwn"] = "On-demand Dispatching (Hardware/Network)";
+tplName["req_fcr"] = "Request - Fulfilled by RSD";
+tplName["req_bf"] = "Request - Back-fill ticket template";
+tplName["req_tpl"] = "Request - Ticket template";
+tplName["req_icoco"] = "Request - iCoco account";
+tplName["req_fuji"] = "Request - Fuji Xerox printer supplies";
+tplName["wn_follow_up"] = "Ticket following up by Support Team";
+tplName["wn_chase"] = "Emailed to Support Team for ticket updates";
+tplName["wn_confirm"] = "Emailed to user for confirmation";
+tplName["wn_confirm_3"] = "Emailed to user for confirmation 3 times";
 
-inc_tpl["inc_fcr"] = ``;
-inc_tpl["inc_bf"] = ``;
-inc_tpl["inc_non_fcr"] = ``;
-inc_tpl["enq_tpl"] = ``;
-inc_tpl["enq_bf"] = ``;
-inc_tpl["od_sw"] = ``;
-inc_tpl["od_hwn"] = ``;
+incTpl["inc_fcr"] = ``;
+incTpl["inc_bf"] = ``;
+incTpl["inc_non_fcr"] = ``;
+incTpl["enq_tpl"] = ``;
+incTpl["enq_bf"] = ``;
+incTpl["od_sw"] = ``;
+incTpl["od_hwn"] = ``;
 
-req_tpl["req_fcr"] = ``;
-req_tpl["req_bf"] = ``;
-req_tpl["req_tpl"] = ``;
-req_tpl["req_icoco"] = ``;
-req_tpl["req_fuji"] = ``;
+reqTpl["req_fcr"] = ``;
+reqTpl["req_bf"] = ``;
+reqTpl["req_tpl"] = ``;
+reqTpl["req_icoco"] = ``;
+reqTpl["req_fuji"] = ``;
 
-wn_tpl["wn_follow_up"] = ``;
-wn_tpl["wn_chase"] = ``;
-wn_tpl["wn_confirm"] = ``;
-wn_tpl["wn_confirm_3"] = ``;
+wnTpl["wn_follow_up"] = ``;
+wnTpl["wn_chase"] = ``;
+wnTpl["wn_confirm"] = ``;
+wnTpl["wn_confirm_3"] = ``;
 
 
 (function () {
     SNToolLogger(`Start`);
-    window.ticket_type = "";
-    window.url_type = "normal";
+    window.ticketType = "";
+    window.urlType = "normal";
 
-    let inc_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
-    let req_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_request\.do\?/i;
-    let task_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_task\.do\?/i;
-    let sc_chechout_match = /^(http|https):\/\/([\w]+)\.service-now\.com\/servicecatalog_checkout_one_v2\.do\?/i;
+    let incMatch = /^(http|https):\/\/([\w]+)\.service-now\.com\/incident\.do\?/i;
+    let reqMatch = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_request\.do\?/i;
+    let taskMatch = /^(http|https):\/\/([\w]+)\.service-now\.com\/sc_task\.do\?/i;
+    let scChechoutMatch = /^(http|https):\/\/([\w]+)\.service-now\.com\/servicecatalog_checkout_one_v2\.do\?/i;
 
     let e;
     let u = window.location.href;
     SNToolLogger(`URL: ${u}`);
 
-    if (u.match(inc_match)) {
+    if (u.match(incMatch)) {
         SNToolLogger(`setAttribute for resolve button`);
-        ticket_type = "inc";
+        ticketType = "inc";
         try {
             let r = document.getElementById("resolve_incident");
             let rb = document.getElementById("resolve_incident_bottom");
@@ -82,34 +82,34 @@ wn_tpl["wn_confirm_3"] = ``;
             console.error(err);
             console.error(`[SNTool] Resolve button not found, moving on`);
         }
-    } else if (u.match(req_match)) {
-        ticket_type = "req";
+    } else if (u.match(reqMatch)) {
+        ticketType = "req";
         SNToolLogger(`Set "element.sc_request.parent" to visible`);
         let div = document.getElementById("element.sc_request.parent");
         div.show();
         addSaveButton();
-    } else if (u.match(task_match)) {
-        ticket_type = "task";
+    } else if (u.match(taskMatch)) {
+        ticketType = "task";
         addSaveButton();
-    } else if (u.match(sc_chechout_match)) {
-        ticket_type = "req";
-        url_type = "sc_checkout";
+    } else if (u.match(scChechoutMatch)) {
+        ticketType = "req";
+        urlType = "sc_checkout";
     }
 
-    SNToolLogger(`ticket_type: ${ticket_type}`);
-    SNToolLogger(`url_type: ${url_type}`);
+    SNToolLogger(`ticketType: ${ticketType}`);
+    SNToolLogger(`urlType: ${urlType}`);
 
-    if (url_type == "sc_checkout") {
+    if (urlType == "sc_checkout") {
         e = document.getElementsByClassName("container").item(2);
     } else {
         e = document.getElementsByClassName("vsplit col-sm-6").item(0);
-        let wn_e = getWnParentElement(ticket_type);
-        let wn_se = addWnTemplateField(wn_e);
-        addWnTemplate(wn_se);
+        let wne = getWnParentElement(ticketType);
+        let wnse = addWnTemplateField(wne);
+        addWnTemplate(wnse);
     }
 
-    se = addTemplateField(e, url_type);  // "select" element of Templete field
-    addTicketTemplate(se, ticket_type);
+    se = addTemplateField(e, urlType);  // "select" element of Templete field
+    addTicketTemplate(se, ticketType);
 
     SNToolLogger(`End`);
 })();
@@ -174,7 +174,7 @@ function addTemplateField(parentElement, uType) {
         tpl_select.className = "form-control";
         tpl_select.setAttribute("aria-labelledby", "label.template");
         tpl_select.setAttribute("ng-non-bindable", "true");
-        tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type, url_type);");
+        tpl_select.setAttribute("onchange", "onSelect(this.value, ticketType, urlType);");
 
         parentElement.append(tpl_div);
         tpl_div.append(tpl_div_label);
@@ -202,7 +202,7 @@ function addTemplateField(parentElement, uType) {
         let tpl_select = document.createElement('select');
         tpl_select.name = tpl_select.id = "template";
         tpl_select.className = "form-control";
-        tpl_select.setAttribute("onchange", "onSelect(this.value, ticket_type, url_type);");
+        tpl_select.setAttribute("onchange", "onSelect(this.value, ticketType, urlType);");
 
         parentElement.parentNode.insertBefore(tpl_div1, parentElement);
         tpl_div1.append(tpl_div2);
@@ -225,19 +225,19 @@ function addTicketTemplate(s, tType) {
     s.append(op);
 
     if (tType == "inc") {
-        for (let key in inc_tpl) {
+        for (let key in incTpl) {
             let t = document.createElement('option');
             t.value = key;
-            t.innerText = tpl_name[key];
+            t.innerText = tplName[key];
             t.setAttribute("role", "option");
             s.append(t);
             SNToolLogger(`${key} added`);
         }
     } else if (tType == "req" || tType == "task") {
-        for (let key in req_tpl) {
+        for (let key in reqTpl) {
             let t = document.createElement('option');
             t.value = key;
-            t.innerText = tpl_name[key];
+            t.innerText = tplName[key];
             t.setAttribute("role", "option");
             s.append(t);
             SNToolLogger(`${key} added`);
@@ -289,7 +289,7 @@ function addWnTemplateField(parentElement) {
     wn_tpl_select.className = "form-control";
     wn_tpl_select.setAttribute("aria-labelledby", "label.wn_template");
     wn_tpl_select.setAttribute("ng-non-bindable", "true");
-    wn_tpl_select.setAttribute("onchange", "onWnSelect(this.value, ticket_type);");
+    wn_tpl_select.setAttribute("onchange", "onWnSelect(this.value, ticketType);");
 
     parentElement.parentNode.insertBefore(wn_tpl_div, parentElement);
     wn_tpl_div.append(wn_tpl_div_label);
@@ -314,10 +314,10 @@ function addWnTemplate(s) {
     op.setAttribute("selected", "SELECTED");
     s.append(op);
 
-    for (let key in wn_tpl) {
+    for (let key in wnTpl) {
         let t = document.createElement('option');
         t.value = key;
-        t.innerText = tpl_name[key];
+        t.innerText = tplName[key];
         t.setAttribute("role", "option");
         s.append(t);
         SNToolLogger(`${key} added`);
@@ -331,13 +331,14 @@ function addTitlePrefix(key, t, l) {
 
     if (l != "(Location/Store Name)") {
         if (key.endsWith("bf")) {
-            titleMatch = "/^\(Back-fill\)" + loc + "/";
+            titleMatch = "(Back-fill)" + loc;
         } else {
-            titleMatch = "/^" + loc + "/";
+            titleMatch = loc;
         }
-        locMatch = "/" + loc + "/";
-        titleMatch = eval(titleMatch);
-        locMatch = eval(locMatch);
+        locMatch = loc;
+
+        titleMatch = new RegExp("^" + escapeRegExp(titleMatch));
+        locMatch = new RegExp(escapeRegExp(locMatch));
 
         if (!document.getElementById(t).value.match(titleMatch)) {
             if (l != "(Location/Store Name)" && !document.getElementById(t).value.match(locMatch)) {
@@ -376,13 +377,13 @@ function getWnParentElement(tType) {
 
 function fillinDesc(key, d, tType) {
     SNToolLogger(`${d}`);
-    if (tType == "inc" && inc_tpl[key] !== undefined) {
+    if (tType == "inc" && incTpl[key] !== undefined) {
         document.getElementById(d).style.height = "1px";
-        document.getElementById(d).value = inc_tpl[key];
+        document.getElementById(d).value = incTpl[key];
         document.getElementById(d).style.height = document.getElementById(d).scrollHeight + "px";
-    } else if ((tType == "req" || tType == "task") && req_tpl[key] !== undefined) {
+    } else if ((tType == "req" || tType == "task") && reqTpl[key] !== undefined) {
         document.getElementById(d).style.height = "1px";
-        document.getElementById(d).value = req_tpl[key];
+        document.getElementById(d).value = reqTpl[key];
         document.getElementById(d).style.height = document.getElementById(d).scrollHeight + "px";
     }
 }
@@ -390,8 +391,8 @@ function fillinDesc(key, d, tType) {
 
 function fillinTitle(key, t, l) {
     SNToolLogger(`${t}`);
-    if (tpl_title[key] !== undefined) {
-        document.getElementById(t).value = tpl_title[key];
+    if (tplTitle[key] !== undefined) {
+        document.getElementById(t).value = tplTitle[key];
     } else {
         addTitlePrefix(key, t, l);
     }
@@ -402,7 +403,7 @@ function fillinTitle(key, t, l) {
 
 
 function fillinWn(key, wn, ag, a) {
-    if (wn_tpl[key] !== undefined) {
+    if (wnTpl[key] !== undefined) {
         if (key == "wn_follow_up") {
             if (ag !== undefined || a !== undefined) {
                 let av = document.getElementById(a).value;
@@ -411,16 +412,27 @@ function fillinWn(key, wn, ag, a) {
                 SNToolLogger(`agv: ${agv}`);
 
                 if (agv != "" && av != "") {
-                    document.getElementById(wn).value = `${av} from ${agv} ${wn_tpl[key]}`;
+                    document.getElementById(wn).value = `${av} from ${agv} ${wnTpl[key]}`;
                 } else if (agv != "" && av == "") {
-                    document.getElementById(wn).value = `${agv} ${wn_tpl[key]}`;
+                    document.getElementById(wn).value = `${agv} ${wnTpl[key]}`;
                 }
 
             }
         } else {
-            document.getElementById(wn).value = wn_tpl[key];
+            document.getElementById(wn).value = wnTpl[key];
         }
     }
+}
+
+
+function escapeRegExp(s) {
+    return s.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
+}
+
+
+function SNToolLogger(msg) {
+    let funcName = SNToolLogger.caller.name;
+    console.log(`[SNTool] ${funcName}()| ${msg}`);
 }
 
 
@@ -490,67 +502,61 @@ window.onWnSelect = function (key, tType) {
     SNToolLogger(`tType: ${tType}`);
     SNToolLogger(`key: ${key}`);
 
-    let wn_textarea;
-    let assignment_group;
+    let wnTextarea;
+    let assignmentGroup;
     let assignee;
 
     if (tType == "inc") {
-        wn_textarea = "incident.work_notes";
-        assignment_group = "sys_display.incident.assignment_group";
+        wnTextarea = "incident.work_notes";
+        assignmentGroup = "sys_display.incident.assignment_group";
         assignee = "sys_display.incident.assigned_to";
     } else if (tType == "req") {
-        wn_textarea = "sc_request.work_notes";
+        wnTextarea = "sc_request.work_notes";
     } else if (tType == "task") {
-        wn_textarea = "sc_task.work_notes";
-        assignment_group = "sys_display.sc_task.assignment_group";
+        wnTextarea = "sc_task.work_notes";
+        assignmentGroup = "sys_display.sc_task.assignment_group";
         assignee = "sys_display.sc_task.assigned_to";
     }
 
-    SNToolLogger(`wn_textarea: ${wn_textarea}`);
-    SNToolLogger(`assignment_group: ${assignment_group}`);
+    SNToolLogger(`wnTextarea: ${wnTextarea}`);
+    SNToolLogger(`assignmentGroup: ${assignmentGroup}`);
     SNToolLogger(`assignee: ${assignee}`);
 
     init();
-    fillinWn(key, wn_textarea, assignment_group, assignee);
+    fillinWn(key, wnTextarea, assignmentGroup, assignee);
 }
 
 
 window.onResolve = function () {
-    let inc_close_notes = "Root Cause: \nResolution/Workaround: ";
-    let enq_close_notes = "Answer: ";
+    let incCloseNotes = "Root Cause: \nResolution/Workaround: ";
+    let enqCloseNotes = "Answer: ";
 
     let u_type = document.getElementById("incident.u_type").value;
     SNToolLogger(`u_type: ${u_type}`);
 
     if (document.getElementById("incident.close_notes").value == "") {
         if (u_type == "incident") {
-            document.getElementById("incident.close_notes").value = inc_close_notes;
+            document.getElementById("incident.close_notes").value = incCloseNotes;
         } else if (u_type == "enquiry") {
-            document.getElementById("incident.close_notes").value = enq_close_notes;
+            document.getElementById("incident.close_notes").value = enqCloseNotes;
         }
     }
 }
 
 
-function SNToolLogger(msg) {
-    let funcName = SNToolLogger.caller.name;
-    console.log(`[SNTool] ${funcName}()| ${msg}`);
-}
-
-
 function init() {
-    inc_tpl["inc_fcr"] = `${loc}
+    incTpl["inc_fcr"] = `${loc}
 Caller: 
 Contact number: 
 Issue symptom: 
 Device(SN): `;
 
-    inc_tpl["inc_bf"] = `${loc}
+    incTpl["inc_bf"] = `${loc}
 Requestor: 
 Contact number: 
 Issue symptom: `;
 
-    inc_tpl["inc_non_fcr"] = `${loc}
+    incTpl["inc_non_fcr"] = `${loc}
 Caller: 
 Contact number: 
 Date and Time of issue: 
@@ -568,17 +574,17 @@ Action Taken by RSD:
 Screenshots and attachments: Please refer to the screenshot(s) named: 
 Special remark: `;
 
-    inc_tpl["enq_tpl"] = `${loc}
+    incTpl["enq_tpl"] = `${loc}
 Caller: 
 Contact number: 
 End-user would like to wonder: `;
 
-    inc_tpl["enq_bf"] = `${loc}
+    incTpl["enq_bf"] = `${loc}
 Caller: 
 Contact number: 
 End-user would like to wonder: `;
 
-    inc_tpl["od_sw"] = `Ticket Number: 
+    incTpl["od_sw"] = `Ticket Number: 
 Priority: 
 Store Name: ${loc}
 Store Address: 
@@ -597,7 +603,7 @@ Action Taken by RSD:
 Screenshots and attachments: Please refer to the screenshot(s) named: 
 Approved By: `;
 
-    inc_tpl["od_hwn"] = `Ticket Number: 
+    incTpl["od_hwn"] = `Ticket Number: 
 Priority: 
 Store Name: ${loc}
 Store Address: 
@@ -610,18 +616,18 @@ Action Taken by RSD:
 Screenshots and attachments: Please refer to the screenshot(s) named: 
 Approved By: `;
 
-    req_tpl["req_fcr"] = `${loc}
+    reqTpl["req_fcr"] = `${loc}
 Caller: 
 Contact number: 
 Request Content: `;
 
-    req_tpl["req_bf"] = `${loc}
+    reqTpl["req_bf"] = `${loc}
 Requestor: 
 Contact number: 
 Request Content: 
 Device (SN): `;
 
-    req_tpl["req_tpl"] = `${loc}
+    reqTpl["req_tpl"] = `${loc}
 Last name: 
 First name: 
 AD Username: 
@@ -634,8 +640,8 @@ Application Content:
 Business Justification: 
 Approved by: `;
 
-    tpl_title["req_icoco"] = "Create/Deactivate/Modify iCoco Account for {BTQ Name} - {Employee ID}";
-    req_tpl["req_icoco"] = `- Last name: 
+    tplTitle["req_icoco"] = "Create/Deactivate/Modify iCoco Account for {BTQ Name} - {Employee ID}";
+    reqTpl["req_icoco"] = `- Last name: 
 - First name: 
 - Email: 
 - AD/LDAP Username: 
@@ -649,8 +655,8 @@ Approved by: `;
 - Request Access: iCoco(Chanel CN Sales) 
 - Active: True/False`;
 
-    tpl_title["req_fuji"] = "香奈儿耗材订购 - {BTQ Name} - {Date}";
-    req_tpl["req_fuji"] = `Ticket Number: 
+    tplTitle["req_fuji"] = "香奈儿耗材订购 - {BTQ Name} - {Date}";
+    reqTpl["req_fuji"] = `Ticket Number: 
 Store Name: ${loc}
 Store Address: 
 Caller: 
@@ -662,8 +668,8 @@ Request Content:
 Screenshots and attachments: Please refer to the screenshot as below and the attachment named: 
 Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联系用户确认，谢谢`;
 
-    wn_tpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
-    wn_tpl["wn_chase"] = `RSD sent email to Support Team for updates. Pending for reply.`;
-    wn_tpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
-    wn_tpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
+    wnTpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
+    wnTpl["wn_chase"] = `RSD sent email to Support Team for updates. Pending for reply.`;
+    wnTpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
+    wnTpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
 }
