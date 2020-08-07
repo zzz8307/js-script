@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.4
+// @version      0.12.5
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -80,7 +80,7 @@ wnTpl["wn_confirm_3"] = ``;
             rb.setAttribute("onclick", "var resolve_incident=window.resolve_incident;resolveIncident();onResolve();return false;");
         } catch (err) {
             console.error(err);
-            console.error(`[SNTool] Resolve button not found, moving on`);
+            SNToolLogger(`Resolve button not found, moving on`);
         }
     } else if (u.match(reqMatch)) {
         ticketType = "req";
@@ -130,8 +130,6 @@ function addSaveButton() {
 
 
 function addTemplateField(parentElement, uType) {
-    SNToolLogger(`uType: ${uType}`);
-
     if (uType == "normal") {
         let ph = document.createElement('div');
         ph.id = "placeholder";
@@ -231,7 +229,6 @@ function addTicketTemplate(s, tType) {
             t.innerText = tplName[key];
             t.setAttribute("role", "option");
             s.append(t);
-            SNToolLogger(`${key} added`);
         }
     } else if (tType == "req" || tType == "task") {
         for (let key in reqTpl) {
@@ -240,15 +237,12 @@ function addTicketTemplate(s, tType) {
             t.innerText = tplName[key];
             t.setAttribute("role", "option");
             s.append(t);
-            SNToolLogger(`${key} added`);
         }
     }
 }
 
 
 function addWnTemplateField(parentElement) {
-    SNToolLogger(`Start`);
-
     let wn_tpl_div = document.createElement('div');
     wn_tpl_div.id = "element.wn_template";
     wn_tpl_div.className = "form-group ";
@@ -305,8 +299,6 @@ function addWnTemplateField(parentElement) {
 
 
 function addWnTemplate(s) {
-    SNToolLogger(`Start`);
-
     let op = document.createElement('option');
     op.value = "";
     op.innerText = "-- None --";
@@ -320,7 +312,6 @@ function addWnTemplate(s) {
         t.innerText = tplName[key];
         t.setAttribute("role", "option");
         s.append(t);
-        SNToolLogger(`${key} added`);
     }
 }
 
@@ -370,7 +361,6 @@ function getWnParentElement(tType) {
         e = "element.sc_task.work_notes";
     }
 
-    SNToolLogger(`${e}`);
     return document.getElementById(e);
 }
 
@@ -391,15 +381,13 @@ function fillinDesc(key, d, tType) {
 
 function fillinTitle(key, t, l) {
     SNToolLogger(`${t}`);
+    SNToolLogger(`${l}`);
     if (tplTitle[key] !== undefined) {
         document.getElementById(t).value = tplTitle[key];
     } else {
         addTitlePrefix(key, t, l);
     }
 }
-
-
-
 
 
 function fillinWn(key, wn, ag, a) {
@@ -430,8 +418,7 @@ function escapeRegExp(s) {
 }
 
 
-function SNToolLogger(msg) {
-    let funcName = SNToolLogger.caller.name;
+function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
     console.log(`[SNTool] ${funcName}()| ${msg}`);
 }
 
@@ -454,8 +441,8 @@ function sleep(ms) {
 
 
 window.onSelect = function (key, tType, uType) {
-    SNToolLogger(`tType: ${tType}`);
-    SNToolLogger(`key: ${key}`);
+    SNToolLogger(`tType: ${tType}`, "onSelect");
+    SNToolLogger(`key: ${key}`, "onSelect");
 
     let desc;
     let title;
@@ -499,8 +486,8 @@ window.onSelect = function (key, tType, uType) {
 
 
 window.onWnSelect = function (key, tType) {
-    SNToolLogger(`tType: ${tType}`);
-    SNToolLogger(`key: ${key}`);
+    SNToolLogger(`tType: ${tType}`, "onWnSelect");
+    SNToolLogger(`key: ${key}`, "onWnSelect");
 
     let wnTextarea;
     let assignmentGroup;
@@ -518,9 +505,9 @@ window.onWnSelect = function (key, tType) {
         assignee = "sys_display.sc_task.assigned_to";
     }
 
-    SNToolLogger(`wnTextarea: ${wnTextarea}`);
-    SNToolLogger(`assignmentGroup: ${assignmentGroup}`);
-    SNToolLogger(`assignee: ${assignee}`);
+    SNToolLogger(`wnTextarea: ${wnTextarea}`, "onWnSelect");
+    SNToolLogger(`assignmentGroup: ${assignmentGroup}`, "onWnSelect");
+    SNToolLogger(`assignee: ${assignee}`, "onWnSelect");
 
     init();
     fillinWn(key, wnTextarea, assignmentGroup, assignee);
@@ -532,7 +519,7 @@ window.onResolve = function () {
     let enqCloseNotes = "Answer: ";
 
     let u_type = document.getElementById("incident.u_type").value;
-    SNToolLogger(`u_type: ${u_type}`);
+    SNToolLogger(`u_type: ${u_type}`, "onResolve");
 
     if (document.getElementById("incident.close_notes").value == "") {
         if (u_type == "incident") {
