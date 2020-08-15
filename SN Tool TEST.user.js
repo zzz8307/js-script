@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.6
+// @version      0.12.7
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -53,7 +53,7 @@ reqTpl["req_fuji"] = ``;
 
 wnTpl["wn_follow_up"] = ``;
 wnTpl["wn_chase_spt"] = ``;
-tplName["wn_chase_user"] = ``;
+wnTpl["wn_chase_user"] = ``;
 wnTpl["wn_confirm"] = ``;
 wnTpl["wn_confirm_3"] = ``;
 
@@ -659,7 +659,7 @@ Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联
 
     wnTpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
     wnTpl["wn_chase_spt"] = `RSD sent email to support team for updates. Pending for reply.`;
-    tplName["wn_chase_user"] = `RSD sent email to user for updates. Pending for reply.`;
+    wnTpl["wn_chase_user"] = `RSD sent email to user for updates. Pending for reply.`;
     wnTpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
     wnTpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
 }
