@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.7
+// @version      0.13.0
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -93,6 +93,7 @@ wnTpl["wn_confirm_3"] = ``;
     } else if (u.match(taskMatch)) {
         ticketType = "task";
         addSaveButton();
+        addCopyFromRequestButton();
     } else if (u.match(scChechoutMatch)) {
         ticketType = "req";
         urlType = "sc_checkout";
@@ -127,6 +128,19 @@ function addSaveButton() {
     saveBtn.setAttribute("type", "submit");
     saveBtn.setAttribute("onclick", "gsftSubmit(gel('sysverb_update_and_stay'))");
     btnHeader.insertBefore(saveBtn, btnHeader.children[4]);
+    SNToolLogger(`Added`);
+}
+
+
+function addCopyFromRequestButton() {
+    let btnHeader = document.querySelectorAll(".navbar_ui_actions").item(0);
+    let copyBtn = document.createElement('button');
+
+    copyBtn.innerHTML = "Copy from Request";
+    copyBtn.setAttribute("class", "form_action_button header  action_context btn btn-default");
+    copyBtn.setAttribute("style", "white-space: nowrap");
+    copyBtn.setAttribute("onclick", "getReqRef();");
+    btnHeader.insertBefore(copyBtn, btnHeader.children[5]);
     SNToolLogger(`Added`);
 }
 
@@ -425,21 +439,17 @@ function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
 }
 
 
-/*
-function getLocation(btn, locID) {
-    let timeout = 0;
-    document.getElementById(btn).click();
-    while (document.getElementById(locID) === null && timeout < 24) {
-        setTimeout(() => timeout += 1, 200);
-    }
-    return document.getElementById(locID).value;
+window.getReqRef = function () {
+    g_form.getReference('request', copyRef);
 }
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+window.copyReqRef = function (caller) {
+    document.getElementById("sc_task.short_description").value = caller.short_description;
+    document.getElementById("sc_task.description").value = caller.special_instructions;
+    document.getElementById("sc_task.description").style.height = document.getElementById("sc_task.description").scrollHeight + "px";
+    SNToolLogger(`Done`, "copyRef");
 }
-*/
 
 
 window.onSelect = function (key, tType, uType) {
