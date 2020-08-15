@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.12.5
+// @version      0.12.6
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -32,7 +32,8 @@ tplName["req_tpl"] = "Request - Ticket template";
 tplName["req_icoco"] = "Request - iCoco account";
 tplName["req_fuji"] = "Request - Fuji Xerox printer supplies";
 tplName["wn_follow_up"] = "Ticket following up by Support Team";
-tplName["wn_chase"] = "Emailed to Support Team for ticket updates";
+tplName["wn_chase_spt"] = "Emailed to support team for updates";
+tplName["wn_chase_user"] = "Emailed to user for updates";
 tplName["wn_confirm"] = "Emailed to user for confirmation";
 tplName["wn_confirm_3"] = "Emailed to user for confirmation 3 times";
 
@@ -51,7 +52,8 @@ reqTpl["req_icoco"] = ``;
 reqTpl["req_fuji"] = ``;
 
 wnTpl["wn_follow_up"] = ``;
-wnTpl["wn_chase"] = ``;
+wnTpl["wn_chase_spt"] = ``;
+tplName["wn_chase_user"] = ``;
 wnTpl["wn_confirm"] = ``;
 wnTpl["wn_confirm_3"] = ``;
 
@@ -656,7 +658,8 @@ Screenshots and attachments: Please refer to the screenshot as below and the att
 Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联系用户确认，谢谢`;
 
     wnTpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
-    wnTpl["wn_chase"] = `RSD sent email to Support Team for updates. Pending for reply.`;
+    wnTpl["wn_chase_spt"] = `RSD sent email to support team for updates. Pending for reply.`;
+    tplName["wn_chase_user"] = `RSD sent email to user for updates. Pending for reply.`;
     wnTpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
     wnTpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
 }
