@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool
-// @version      0.12.7
+// @version      0.12.8
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -31,11 +31,11 @@ tplName["req_bf"] = "Request - Back-fill ticket template";
 tplName["req_tpl"] = "Request - Ticket template";
 tplName["req_icoco"] = "Request - iCoco account";
 tplName["req_fuji"] = "Request - Fuji Xerox printer supplies";
-tplName["wn_follow_up"] = "Ticket following up by Support Team";
-tplName["wn_chase_spt"] = "Emailed to support team for updates";
-tplName["wn_chase_user"] = "Emailed to user for updates";
-tplName["wn_confirm"] = "Emailed to user for confirmation";
-tplName["wn_confirm_3"] = "Emailed to user for confirmation 3 times";
+tplName["wn_follow_up"] = "Ticket following up by support team";
+tplName["wn_chase_spt"] = "Emailed for update - to support team";
+tplName["wn_chase_user"] = "Emailed for update - to user";
+tplName["wn_confirm"] = "Emailed for confirmation - to user";
+tplName["wn_confirm_3"] = "Emailed for confirmation - to user 3 times";
 
 incTpl["inc_fcr"] = ``;
 incTpl["inc_bf"] = ``;
