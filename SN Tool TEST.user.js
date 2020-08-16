@@ -31,11 +31,11 @@ tplName["req_bf"] = "Request - Back-fill ticket template";
 tplName["req_tpl"] = "Request - Ticket template";
 tplName["req_icoco"] = "Request - iCoco account";
 tplName["req_fuji"] = "Request - Fuji Xerox printer supplies";
-tplName["wn_follow_up"] = "Ticket following up by Support Team";
-tplName["wn_chase_spt"] = "Emailed to support team for updates";
-tplName["wn_chase_user"] = "Emailed to user for updates";
-tplName["wn_confirm"] = "Emailed to user for confirmation";
-tplName["wn_confirm_3"] = "Emailed to user for confirmation 3 times";
+tplName["wn_follow_up"] = "Ticket following up by support team";
+tplName["wn_chase_spt"] = "Email for update - to support team";
+tplName["wn_chase_user"] = "Email for update - to user";
+tplName["wn_confirm"] = "Email for confirmation - to user";
+tplName["wn_confirm_3"] = "Email for confirmation - to user 3 times";
 
 incTpl["inc_fcr"] = ``;
 incTpl["inc_bf"] = ``;
@@ -668,8 +668,8 @@ Screenshots and attachments: Please refer to the screenshot as below and the att
 Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联系用户确认，谢谢`;
 
     wnTpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
-    wnTpl["wn_chase_spt"] = `RSD sent email to support team for updates. Pending for reply.`;
-    wnTpl["wn_chase_user"] = `RSD sent email to user for updates. Pending for reply.`;
+    wnTpl["wn_chase_spt"] = `RSD has sent an email to support team for update. Pending for reply.`;
+    wnTpl["wn_chase_user"] = `RSD has sent an email to user for update. Pending for reply.`;
     wnTpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
     wnTpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
 }
