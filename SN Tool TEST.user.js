@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.13.0
+// @version      0.13.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -440,7 +440,9 @@ function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
 
 
 window.getReqRef = function () {
-    g_form.getReference('request', copyRef);
+    document.getElementById("sc_task.short_description").value = "Loading...";
+    document.getElementById("sc_task.description").value = "Loading...";
+    g_form.getReference('request', copyReqRef);
 }
 
 
@@ -448,7 +450,7 @@ window.copyReqRef = function (caller) {
     document.getElementById("sc_task.short_description").value = caller.short_description;
     document.getElementById("sc_task.description").value = caller.special_instructions;
     document.getElementById("sc_task.description").style.height = document.getElementById("sc_task.description").scrollHeight + "px";
-    SNToolLogger(`Done`, "copyRef");
+    SNToolLogger(`Done`, "copyReqRef");
 }
 
 

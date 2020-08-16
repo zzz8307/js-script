@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool
-// @version      0.12.8
+// @version      0.13.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -32,10 +32,10 @@ tplName["req_tpl"] = "Request - Ticket template";
 tplName["req_icoco"] = "Request - iCoco account";
 tplName["req_fuji"] = "Request - Fuji Xerox printer supplies";
 tplName["wn_follow_up"] = "Ticket following up by support team";
-tplName["wn_chase_spt"] = "Emailed for update - to support team";
-tplName["wn_chase_user"] = "Emailed for update - to user";
-tplName["wn_confirm"] = "Emailed for confirmation - to user";
-tplName["wn_confirm_3"] = "Emailed for confirmation - to user 3 times";
+tplName["wn_chase_spt"] = "Email for update - to support team";
+tplName["wn_chase_user"] = "Email for update - to user";
+tplName["wn_confirm"] = "Email for confirmation - to user";
+tplName["wn_confirm_3"] = "Email for confirmation - to user 3 times";
 
 incTpl["inc_fcr"] = ``;
 incTpl["inc_bf"] = ``;
@@ -93,6 +93,7 @@ wnTpl["wn_confirm_3"] = ``;
     } else if (u.match(taskMatch)) {
         ticketType = "task";
         addSaveButton();
+        addCopyFromRequestButton();
     } else if (u.match(scChechoutMatch)) {
         ticketType = "req";
         urlType = "sc_checkout";
@@ -127,6 +128,19 @@ function addSaveButton() {
     saveBtn.setAttribute("type", "submit");
     saveBtn.setAttribute("onclick", "gsftSubmit(gel('sysverb_update_and_stay'))");
     btnHeader.insertBefore(saveBtn, btnHeader.children[4]);
+    SNToolLogger(`Added`);
+}
+
+
+function addCopyFromRequestButton() {
+    let btnHeader = document.querySelectorAll(".navbar_ui_actions").item(0);
+    let copyBtn = document.createElement('button');
+
+    copyBtn.innerHTML = "Copy from Request";
+    copyBtn.setAttribute("class", "form_action_button header  action_context btn btn-default");
+    copyBtn.setAttribute("style", "white-space: nowrap");
+    copyBtn.setAttribute("onclick", "getReqRef();");
+    btnHeader.insertBefore(copyBtn, btnHeader.children[5]);
     SNToolLogger(`Added`);
 }
 
@@ -425,21 +439,19 @@ function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
 }
 
 
-/*
-function getLocation(btn, locID) {
-    let timeout = 0;
-    document.getElementById(btn).click();
-    while (document.getElementById(locID) === null && timeout < 24) {
-        setTimeout(() => timeout += 1, 200);
-    }
-    return document.getElementById(locID).value;
+window.getReqRef = function () {
+    document.getElementById("sc_task.short_description").value = "Loading...";
+    document.getElementById("sc_task.description").value = "Loading...";
+    g_form.getReference('request', copyReqRef);
 }
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+window.copyReqRef = function (caller) {
+    document.getElementById("sc_task.short_description").value = caller.short_description;
+    document.getElementById("sc_task.description").value = caller.special_instructions;
+    document.getElementById("sc_task.description").style.height = document.getElementById("sc_task.description").scrollHeight + "px";
+    SNToolLogger(`Done`, "copyReqRef");
 }
-*/
 
 
 window.onSelect = function (key, tType, uType) {
@@ -658,8 +670,8 @@ Screenshots and attachments: Please refer to the screenshot as below and the att
 Remark: 如配送已完成，麻烦请将签收单回复此邮件，以便RSD联系用户确认，谢谢`;
 
     wnTpl["wn_follow_up"] = `is following up the ticket. Pending for reply.`;
-    wnTpl["wn_chase_spt"] = `RSD sent email to support team for updates. Pending for reply.`;
-    wnTpl["wn_chase_user"] = `RSD sent email to user for updates. Pending for reply.`;
+    wnTpl["wn_chase_spt"] = `RSD has sent an email to support team for update. Pending for reply.`;
+    wnTpl["wn_chase_user"] = `RSD has sent an email to user for update. Pending for reply.`;
     wnTpl["wn_confirm"] = `RSD has sent an email to the user for confirmation. Pending for reply.`;
     wnTpl["wn_confirm_3"] = `RSD has sent confirmation emails to user three times. The ticket will be closed after seven days if no response from the user.`;
 }
