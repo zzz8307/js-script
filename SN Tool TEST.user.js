@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.14.0
+// @version      0.14.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -155,7 +155,7 @@ function addAssignToMeButton() {
     assignBtn.setAttribute("class", "form_action_button header  action_context btn btn-default");
     assignBtn.setAttribute("style", "white-space: nowrap");
     assignBtn.setAttribute("onclick", "assignToMe(ticketType);");
-    btnHeader.insertBefore(assignBtn, btnHeader.children[6]);
+    btnHeader.insertBefore(assignBtn, btnHeader.children[5]);
     SNToolLogger(`Added`);
 }
 
