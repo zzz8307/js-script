@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.14.2
+// @version      0.14.3
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -476,17 +476,16 @@ window.assignToMe = function (tType) {
         g_form.setValue("assignment_group", oID);
         SNToolLogger(`Group ID: ${oID}`, "assignToMe");
     } else if (tType == "task") {
-        g_form.getReference("request", copyOwnerGrougFromReq);
+        g_form.getReference("request", copyOwnerGroupFromReq);
     }
     g_form.setValue("assigned_to", uID);
     SNToolLogger(`User ID: ${uID}`, "assignToMe");
-    SNToolLogger(`Done`, "assignToMe");
 }
 
 
-window.copyOwnerGrougFromReq = function (caller) {
+window.copyOwnerGroupFromReq = function (caller) {
     g_form.setValue("assignment_group", caller.u_owner_group)
-    SNToolLogger(`Group ID: ${caller.u_owner_group}`, "copyOwnerGrougFromReq");
+    SNToolLogger(`Group ID: ${caller.u_owner_group}`, "copyOwnerGroupFromReq");
 }
 
 
