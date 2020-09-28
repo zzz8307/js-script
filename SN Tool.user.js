@@ -338,7 +338,7 @@ function addTitlePrefix(key, t, l) {
 
     if (l != "(Location/Store Name)") {
         if (key.endsWith("bf")) {
-            titleMatch = "(Back-fill)" + loc;
+            titleMatch = "[BACKLOG]" + loc;
         } else {
             titleMatch = loc;
         }
@@ -352,15 +352,15 @@ function addTitlePrefix(key, t, l) {
                 SNToolLogger(`Add location prefix to ${t}`);
                 document.getElementById(t).value = l + " " + document.getElementById(t).value;
             }
-            if (key.endsWith("bf") && !document.getElementById(t).value.startsWith("(Back-fill)")) {
+            if (key.endsWith("bf") && !document.getElementById(t).value.startsWith("[BACKLOG]")) {
                 SNToolLogger(`Add back-fill prefix to ${t}`);
-                document.getElementById(t).value = "(Back-fill)" + document.getElementById(t).value;
+                document.getElementById(t).value = "[BACKLOG]" + document.getElementById(t).value;
             }
         }
     } else if (l == "(Location/Store Name)" && key.endsWith("bf")) {
-        if (!document.getElementById(t).value.startsWith("(Back-fill)")) {
+        if (!document.getElementById(t).value.startsWith("[BACKLOG]")) {
             SNToolLogger(`Add back-fill prefix to ${t}`);
-            document.getElementById(t).value = "(Back-fill)" + document.getElementById(t).value;
+            document.getElementById(t).value = "[BACKLOG]" + document.getElementById(t).value;
         }
     }
 }
