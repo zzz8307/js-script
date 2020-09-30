@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool
-// @version      0.13.1
+// @version      0.14.3
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -84,6 +84,7 @@ wnTpl["wn_confirm_3"] = ``;
             console.error(err);
             SNToolLogger(`Resolve button not found, moving on`);
         }
+        addAssignToMeButton();
     } else if (u.match(reqMatch)) {
         ticketType = "req";
         SNToolLogger(`Set "element.sc_request.parent" to visible`);
@@ -94,6 +95,7 @@ wnTpl["wn_confirm_3"] = ``;
         ticketType = "task";
         addSaveButton();
         addCopyFromRequestButton();
+        addAssignToMeButton();
     } else if (u.match(scChechoutMatch)) {
         ticketType = "req";
         urlType = "sc_checkout";
@@ -141,6 +143,19 @@ function addCopyFromRequestButton() {
     copyBtn.setAttribute("style", "white-space: nowrap");
     copyBtn.setAttribute("onclick", "getReqRef();");
     btnHeader.insertBefore(copyBtn, btnHeader.children[5]);
+    SNToolLogger(`Added`);
+}
+
+
+function addAssignToMeButton() {
+    let btnHeader = document.querySelectorAll(".navbar_ui_actions").item(0);
+    let assignBtn = document.createElement('button');
+
+    assignBtn.innerHTML = "Assign to Me";
+    assignBtn.setAttribute("class", "form_action_button header  action_context btn btn-default");
+    assignBtn.setAttribute("style", "white-space: nowrap");
+    assignBtn.setAttribute("onclick", "assignToMe(ticketType);");
+    btnHeader.insertBefore(assignBtn, btnHeader.children[0]);
     SNToolLogger(`Added`);
 }
 
@@ -430,7 +445,21 @@ function fillinWn(key, wn, ag, a) {
 
 
 function escapeRegExp(s) {
-    return s.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
+    return s.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&");
+}
+
+
+function getLocation() {
+    let userID = g_form.getValue("requested_for")
+    let gr_user = new GlideRecord("sys_user");
+    gr_user.get(userID);
+
+    let locID = gr_user.location;
+    let gr_loc = new GlideRecord("cmn_location");
+    gr_loc.get(locID);
+
+    let locName = gr_loc.name;
+    return locName;
 }
 
 
@@ -439,10 +468,31 @@ function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
 }
 
 
+window.assignToMe = function (tType) {
+    let oID;
+    let uID = g_user.userID;
+    if (tType == "inc") {
+        oID = g_form.getValue("u_owner_group");
+        g_form.setValue("assignment_group", oID);
+        SNToolLogger(`Group ID: ${oID}`, "assignToMe");
+    } else if (tType == "task") {
+        g_form.getReference("request", copyOwnerGroupFromReq);
+    }
+    g_form.setValue("assigned_to", uID);
+    SNToolLogger(`User ID: ${uID}`, "assignToMe");
+}
+
+
+window.copyOwnerGroupFromReq = function (caller) {
+    g_form.setValue("assignment_group", caller.u_owner_group)
+    SNToolLogger(`Group ID: ${caller.u_owner_group}`, "copyOwnerGroupFromReq");
+}
+
+
 window.getReqRef = function () {
     document.getElementById("sc_task.short_description").value = "Loading...";
     document.getElementById("sc_task.description").value = "Loading...";
-    g_form.getReference('request', copyReqRef);
+    g_form.getReference("request", copyReqRef);
 }
 
 
@@ -482,7 +532,7 @@ window.onSelect = function (key, tType, uType) {
         } else if (uType == "sc_checkout") {
             desc = "special_instructions";
             title = "title";
-            // loc = getLocation("sc_cart.requested_forLINKreplace", "sys_user.location_label");
+            loc = getLocation();
             document.getElementById("special_instructions").click();
         }
 
