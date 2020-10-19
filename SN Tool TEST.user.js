@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.14.4
+// @version      0.15.0
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -18,6 +18,7 @@ var tplName = new Object();
 var tplTitle = new Object();
 
 var loc = "(Location/Store Name)";
+var wnVisible = false;
 
 tplName["inc_fcr"] = "Incident - FCR ticket template";
 tplName["inc_bf"] = "Incident - Back-fill ticket template";
@@ -87,9 +88,6 @@ wnTpl["wn_confirm_3"] = ``;
         addAssignToMeButton();
     } else if (u.match(reqMatch)) {
         ticketType = "req";
-        SNToolLogger(`Set "element.sc_request.parent" to visible`);
-        let div = document.getElementById("element.sc_request.parent");
-        div.show();
         addSaveButton();
     } else if (u.match(taskMatch)) {
         ticketType = "task";
@@ -115,6 +113,7 @@ wnTpl["wn_confirm_3"] = ``;
 
     se = addTemplateField(e, urlType);  // "select" element of Templete field
     addTicketTemplate(se, ticketType);
+    replaceLightBulb(ticketType, urlType);
 
     SNToolLogger(`End`);
 })();
@@ -172,7 +171,7 @@ function addTemplateField(parentElement, uType) {
         let tpl_div = document.createElement('div');
         tpl_div.id = "element.template";
         tpl_div.className = "form-group ";
-        tpl_div.style = "";
+        tpl_div.style = "display: none;";
 
         let tpl_div_label = document.createElement('div');
         tpl_div_label.id = "label.template";
@@ -217,6 +216,7 @@ function addTemplateField(parentElement, uType) {
     } else if (uType == "sc_checkout") {
         let tpl_div1 = document.createElement('div');
         tpl_div1.className = "container";
+        tpl_div1.style = "display: none;";
 
         let tpl_div2 = document.createElement('div');
         tpl_div2.className = "row col-xs-12 sc_cv_info_row";
@@ -277,7 +277,7 @@ function addWnTemplateField(parentElement) {
     let wn_tpl_div = document.createElement('div');
     wn_tpl_div.id = "element.wn_template";
     wn_tpl_div.className = "form-group ";
-    wn_tpl_div.style = "";
+    wn_tpl_div.style = "display: none;";
 
     let wn_tpl_div_label = document.createElement('div');
     wn_tpl_div_label.id = "label.wn_template";
@@ -463,6 +463,36 @@ function getLocation() {
 }
 
 
+function replaceLightBulb(tType, uType) {
+    let eid;
+    let e;
+
+    if (tType == "inc") {
+        eid = "lookup.incident.short_description";
+        e = document.getElementById(eid);
+    } else if (tType == "req") {
+        if (uType == "normal") {
+            eid = "lookup.sc_request.short_description";
+            e = document.getElementById(eid);
+        } else if (uType == "sc_checkout") {
+            e = document.getElementsByClassName("sc_cv_edit_items_buttons").item(0).children[2];
+        }
+    } else if (tType == "task") {
+        eid = "lookup.sc_task.short_description";
+        e = document.getElementById(eid);
+    }
+
+    e.removeAttribute("data-type");
+    e.removeAttribute("data-table");
+    e.removeAttribute("data-ref");
+    e.removeAttribute("data-element");
+    e.removeAttribute("data-dependent");
+    e.setAttribute("onclick", "showTemplate(urlType);");
+
+    SNToolLogger("We are assassins");
+}
+
+
 function SNToolLogger(msg, funcName = SNToolLogger.caller.name) {
     console.log(`[SNTool] ${funcName}()| ${msg}`);
 }
@@ -501,6 +531,39 @@ window.copyReqRef = function (caller) {
     document.getElementById("sc_task.description").value = caller.special_instructions;
     document.getElementById("sc_task.description").style.height = document.getElementById("sc_task.description").scrollHeight + "px";
     SNToolLogger(`Done`, "copyReqRef");
+}
+
+
+window.showTemplate = function (uType) {
+    if (uType == "normal") {
+        if (wnVisible == false) {
+            if (ticketType == "req") {
+                div = document.getElementById("element.sc_request.parent").show();
+            }
+            document.getElementById("element.template").show();
+            document.getElementById("element.wn_template").show();
+            wnVisible = true;
+            SNToolLogger(`We serve the light`, "showTemplate");
+        } else if (wnVisible == true) {
+            if (ticketType == "req") {
+                div = document.getElementById("element.sc_request.parent").hide();
+            }
+            document.getElementById("element.template").hide();
+            document.getElementById("element.wn_template").hide();
+            wnVisible = false;
+            SNToolLogger(`We work in the dark`, "showTemplate");
+        }
+    } else if (uType == "sc_checkout") {
+        if (wnVisible == false) {
+            document.getElementsByClassName("container").item(2).show();
+            wnVisible = true;
+            SNToolLogger(`We serve the light`, "showTemplate");
+        } else if (wnVisible == true) {
+            document.getElementsByClassName("container").item(2).hide();
+            wnVisible = false;
+            SNToolLogger(`We work in the dark`, "showTemplate");
+        }
+    }
 }
 
 
