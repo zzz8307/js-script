@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.15.0
+// @version      0.15.1
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -459,6 +459,9 @@ function getLocation() {
     gr_loc.get(locID);
 
     let locName = gr_loc.name;
+    if (locName == undefined) {
+        return "";
+    }
     return locName;
 }
 
@@ -571,39 +574,33 @@ window.onSelect = function (key, tType, uType) {
     SNToolLogger(`tType: ${tType}`, "onSelect");
     SNToolLogger(`key: ${key}`, "onSelect");
 
+    let l;
     let desc;
     let title;
 
     if (tType == "inc") {
         desc = "incident.description";
         title = "incident.short_description";
-
-        let v = document.getElementById("sys_display.incident.u_requested_for.location").value;
-        if (v != "" && v != "TEMP123") {
-            loc = v;
-        }
+        l = document.getElementById("sys_display.incident.u_requested_for.location").value;
     } else if (tType == "req") {
-
         if (uType == "normal") {
             desc = "sc_request.special_instructions";
             title = "sc_request.short_description";
-
-            let v = document.getElementById("sys_display.sc_request.requested_for.location").value;
-            if (v != "" && v != "TEMP123") {
-                loc = v;
-            }
+            l = document.getElementById("sys_display.sc_request.requested_for.location").value;
         } else if (uType == "sc_checkout") {
             desc = "special_instructions";
             title = "title";
-            loc = getLocation();
+            l = getLocation();
             document.getElementById("special_instructions").click();
         }
-
     } else if (tType == "task") {
         desc = "sc_task.description";
         title = "sc_task.short_description";
-        // loc = getLocation("viewr.sc_task.request", "sc_request.requested_for.location_label");
         document.getElementById("sc_task.description").click();
+    }
+
+    if (l != "" && l != "TEMP123") {
+        loc = l;
     }
 
     init();
