@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.15.1
+// @version      0.15.2
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -467,30 +467,38 @@ function getLocation() {
 
 
 function replaceLightBulb(tType, uType) {
-    let eid;
-    let e;
+    let titleID;
+    let worknotesID;
+    let titleElement;
+    let worknotesElement;
 
     if (tType == "inc") {
-        eid = "lookup.incident.short_description";
-        e = document.getElementById(eid);
+        titleID = "status.incident.short_description";
+        worknotesID = "status.incident.work_notes";
+        titleElement = document.getElementById(titleID).nextElementSibling;
+        worknotesElement = document.getElementById(worknotesID).nextElementSibling;
     } else if (tType == "req") {
         if (uType == "normal") {
-            eid = "lookup.sc_request.short_description";
-            e = document.getElementById(eid);
+            titleID = "status.sc_request.short_description";
+            worknotesID = "status.sc_request.work_notes";
+            titleElement = document.getElementById(titleID).nextElementSibling;
+            worknotesElement = document.getElementById(worknotesID).nextElementSibling;
         } else if (uType == "sc_checkout") {
-            e = document.getElementsByClassName("sc_cv_edit_items_buttons").item(0).children[2];
+            titleElement = document.getElementsByClassName("col-xs-2 sc_requested_label").item(4);
         }
     } else if (tType == "task") {
-        eid = "lookup.sc_task.short_description";
-        e = document.getElementById(eid);
+        titleID = "status.sc_task.short_description";
+        worknotesID = "status.sc_task.work_notes";
+        titleElement = document.getElementById(titleID).nextElementSibling;
+        worknotesElement = document.getElementById(worknotesID).nextElementSibling;
     }
 
-    e.removeAttribute("data-type");
-    e.removeAttribute("data-table");
-    e.removeAttribute("data-ref");
-    e.removeAttribute("data-element");
-    e.removeAttribute("data-dependent");
-    e.setAttribute("onclick", "showTemplate(urlType);");
+    try {
+        titleElement.setAttribute("onclick", "showTemplate(urlType);");
+        worknotesElement.setAttribute("onclick", "showTemplate(urlType);");
+    } catch (err) {
+        console.error(err)
+    }
 
     SNToolLogger("We are assassins");
 }
