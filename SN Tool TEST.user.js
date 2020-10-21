@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.15.2
+// @version      0.15.4
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -18,7 +18,7 @@ var tplName = new Object();
 var tplTitle = new Object();
 
 var loc = "(Location/Store Name)";
-var wnVisible = false;
+var tplVisible = false;
 
 tplName["inc_fcr"] = "Incident - FCR ticket template";
 tplName["inc_bf"] = "Incident - Back-fill ticket template";
@@ -113,7 +113,7 @@ wnTpl["wn_confirm_3"] = ``;
 
     se = addTemplateField(e, urlType);  // "select" element of Templete field
     addTicketTemplate(se, ticketType);
-    replaceLightBulb(ticketType, urlType);
+    hideAndSeek(ticketType, urlType);
 
     SNToolLogger(`End`);
 })();
@@ -466,7 +466,7 @@ function getLocation() {
 }
 
 
-function replaceLightBulb(tType, uType) {
+function hideAndSeek(tType, uType) {
     let titleID;
     let worknotesID;
     let titleElement;
@@ -547,31 +547,31 @@ window.copyReqRef = function (caller) {
 
 window.showTemplate = function (uType) {
     if (uType == "normal") {
-        if (wnVisible == false) {
+        if (tplVisible == false) {
             if (ticketType == "req") {
                 div = document.getElementById("element.sc_request.parent").show();
             }
             document.getElementById("element.template").show();
             document.getElementById("element.wn_template").show();
-            wnVisible = true;
+            tplVisible = true;
             SNToolLogger(`We serve the light`, "showTemplate");
-        } else if (wnVisible == true) {
+        } else if (tplVisible == true) {
             if (ticketType == "req") {
                 div = document.getElementById("element.sc_request.parent").hide();
             }
             document.getElementById("element.template").hide();
             document.getElementById("element.wn_template").hide();
-            wnVisible = false;
+            tplVisible = false;
             SNToolLogger(`We work in the dark`, "showTemplate");
         }
     } else if (uType == "sc_checkout") {
-        if (wnVisible == false) {
+        if (tplVisible == false) {
             document.getElementsByClassName("container").item(2).show();
-            wnVisible = true;
+            tplVisible = true;
             SNToolLogger(`We serve the light`, "showTemplate");
-        } else if (wnVisible == true) {
+        } else if (tplVisible == true) {
             document.getElementsByClassName("container").item(2).hide();
-            wnVisible = false;
+            tplVisible = false;
             SNToolLogger(`We work in the dark`, "showTemplate");
         }
     }
