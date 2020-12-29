@@ -92,8 +92,8 @@ wnTpl["wn_confirm_3"] = ``;
     } else if (u.match(taskMatch)) {
         ticketType = "task";
         addSaveButton();
-        addCopyFromRequestButton();
         addAssignToMeButton();
+        addCopyFromRequestButton();
     } else if (u.match(scChechoutMatch)) {
         ticketType = "req";
         urlType = "sc_checkout";
@@ -141,7 +141,7 @@ function addCopyFromRequestButton() {
     copyBtn.setAttribute("class", "form_action_button header  action_context btn btn-default");
     copyBtn.setAttribute("style", "white-space: nowrap");
     copyBtn.setAttribute("onclick", "getReqRef();");
-    btnHeader.insertBefore(copyBtn, btnHeader.children[5]);
+    btnHeader.insertBefore(copyBtn, btnHeader.children[0]);
     SNToolLogger(`Added`);
 }
 
