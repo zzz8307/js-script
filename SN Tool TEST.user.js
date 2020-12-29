@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.15.4
+// @version      0.15.5
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
