@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SN Tool TEST
-// @version      0.15.5
+// @version      0.15.6
 // @author       rc
 // @match        https://chanelasia.service-now.com/incident.do*
 // @match        https://chanelasia.service-now.com/sc_request.do*
@@ -381,6 +381,27 @@ function addTitlePrefix(key, t, l) {
 }
 
 
+function changeBfContactType(key, tType, uType) {
+    let contactType;
+
+    if (key.endsWith("bf")) {
+        if (tType == "inc") {
+            contactType = document.getElementById('incident.contact_type');
+            contactType.value = "walk-in";
+        } else if (tType == "req") {
+            if (uType == "normal") {
+                contactType = document.getElementById('sc_request.contact_type');
+                contactType.value = "walk-in";
+            } else if (uType == "sc_checkout") {
+                contactType = document.getElementById('contact_type');
+                contactType.value = "walk-in";
+            }
+        }
+        SNToolLogger(`changed`)
+    }
+}
+
+
 function getWnParentElement(tType) {
     let e;
 
@@ -614,6 +635,7 @@ window.onSelect = function (key, tType, uType) {
     init();
     fillinDesc(key, desc, tType);
     fillinTitle(key, title, loc);
+    changeBfContactType(key, tType, uType);
 }
 
 
